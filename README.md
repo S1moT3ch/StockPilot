@@ -1,0 +1,2 @@
+# StockPilot
+WebApp_gestionale_di_magazzino
