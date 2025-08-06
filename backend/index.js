@@ -12,11 +12,11 @@ const authRoutes = require('./routes/authRoutes');
 const app = express(); // creazione dell'app con il framework express
 const server = http.createServer(app);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 //middleware definiti in ordine di esecuzione
 app.use(cors({
-    origin: 'http://localhost:5001',
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 

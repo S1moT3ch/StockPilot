@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
 // Middleware per verificare l'Access Token JWT
-const verifyAccesToken = (req, res, next) => {
+const verifyAccessToken = (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
     if(!authHeader?.startsWith('Bearer ')) {
@@ -22,4 +22,4 @@ const verifyAccesToken = (req, res, next) => {
     });
 };
 
-module.exports = { verifyAceessToken };
+module.exports = { verifyAccessToken } ;
