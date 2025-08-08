@@ -24,8 +24,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
             <Route path="/user" element={<User />} />
             <Route path="/orders" element={<Orders />} />
-            /*
             <Route path="/deliveries" element={<Deliveries />} />
+            /*
             <Route path="/catalogue" element={<Catalogue />} />
             <Route path="/chat" element={<Chat />} />
             */

@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
         required: [true, 'La categoria è obbligatoria'],
     },
 
-    categoria: {
+    ubicazione: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Location',
         required: [true, "L'ubicazione è obbligatoria"],
@@ -35,6 +35,12 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vector',
         required: [true, 'Il vettore è obbligatorio'],
+    },
+
+    inMagazzino: {
+        type: 'Boolean',
+        required: true,
+        default: false
     }
 })
 
