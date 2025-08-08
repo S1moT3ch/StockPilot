@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -9,9 +10,11 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-const Options = () => {
+const Options = ({productId}) => {
     const [locations, setLocations] = useState([]);
-    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -37,10 +40,27 @@ const Options = () => {
         setSelectedLocation(event.target.value);
     }
 
+    const handleUpdateProductLocation = async (productId, locationId) => {
+        try{
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.put(`http://localhost:5000/api/products/${productId}`, {locationId}, {
+                headers :{
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            })
+            setSuccessMessage('Ubicazione prodotto aggiunta con successo!');
+        } catch (error) {
+            console.error("Errore nell'update dell'ubicazione del prodotto", error);
+            const message = error.response?.data?.error?.message;
+            setErrorMessage(message);
+        }
+    }
+
     return (
         <Box>
             <Typography>Prodotto non in magazzino. Scegli un posto dove riporlo:</Typography>
-            <FormControl sx={{ width:200 }}>
+            <FormControl sx={{ width:300 }}>
                 <InputLabel id="select-label">Ubicazione</InputLabel>
                 <Select
                     labelId="selected-label"
@@ -49,7 +69,7 @@ const Options = () => {
                     onChange={handleChange}
                 >
                     {locations.map((location) => (
-                        <MenuItem key={location.id} value={location.id}>
+                        <MenuItem key={location._id} value={location._id}>
                             Corridoio&nbsp;<strong>{location.corridoio}</strong>,
                             Scaffale&nbsp;<strong>{location.scaffale}</strong>,
                             Mensola&nbsp;<strong>{location.mensola}</strong>
@@ -57,7 +77,27 @@ const Options = () => {
                     ))}
                 </Select>
             </FormControl>
-            <Button variant="contained">Aggiungi prodotto in magazzino</Button>
+
+            {errorMessage && (
+                <Alert severity="error">
+                    {errorMessage}
+                </Alert>
+            )}
+
+            {successMessage && (
+                <Alert severity="success">
+                    {successMessage}
+                </Alert>
+            )}
+
+            <Button
+                variant="contained"
+                onClick={() => handleUpdateProductLocation(productId, selectedLocation)}
+            >
+                Aggiungi prodotto in magazzino
+            </Button>
+
+
         </Box>
     )
 }

@@ -46,13 +46,13 @@ exports.getDelivery = async (req, res) => {
 
 exports.deleteDelivery = async (req, res) => {
     const { deliveryId } = req.params;
-    console.log(deliveryId);
     try{
-        const delivery = await Delivery.findByIdAndDelete( orderId );
-        res.status(200).json({ message:"Ordine eliminato" });
+        const delivery = await Delivery.findByIdAndDelete( deliveryId );
+        console.log( delivery);
         if(!delivery) {
             return res.status(404).json({ message: 'Ordine non trovato'});
         }
+        res.status(200).json({ message:"Ordine eliminato" });
     } catch (error) {
         console.error("Errore nell'eliminazione dell'ordine:", error);
         res.status(500).json({ message: 'Errore del server'});

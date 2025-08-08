@@ -19,6 +19,12 @@ const productSchema = new mongoose.Schema({
         required: [true, 'La categoria è obbligatoria'],
     },
 
+    quantità: {
+        type:"Number",
+        required: true,
+        default: 0
+    },
+
     ubicazione: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Location',
@@ -41,6 +47,11 @@ const productSchema = new mongoose.Schema({
         type: 'Boolean',
         required: true,
         default: false
+    },
+
+    segnalazione: {
+        type: "String",
+        default: null
     }
 })
 

@@ -69,7 +69,7 @@ const Deliveries = () => {
     const handleDelete = async (deliveryId) => {
         const token = localStorage.getItem('accessToken')
         try {
-            await axios.delete(`http://localhost:5000/api/orders/${deliveryId}`, {
+            await axios.delete(`http://localhost:5000/api/deliveries/${deliveryId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -128,7 +128,7 @@ const Deliveries = () => {
                                                 <Typography>Mensola: {selectedDelivery.prodotto.ubicazione.mensola}</Typography>
                                             </Box>
                                         ) : (
-                                            <Options />
+                                            <Options productId={selectedDelivery.prodotto._id} />
                                         )
                                     }
                                 </Box>
