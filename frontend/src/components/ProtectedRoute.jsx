@@ -1,8 +1,8 @@
 import { useEffect, useState} from 'react';
 import {Navigate, Outlet } from 'react-router-dom';
 import {checkAuth} from '../services/authService';
-import App from "../App";
 
+//funzione per vericare l'autenticazione lato client
 function ProtectedRoute() {
     const [isAuth, setIsAuth] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -18,6 +18,9 @@ function ProtectedRoute() {
     }, []);
 
     if (loading) return <p>Caricamento</p>;
+    if (!isAuth) return <Navigate to ='/login' replace />
+
+    return <Outlet />;
 }
 
 export default ProtectedRoute;

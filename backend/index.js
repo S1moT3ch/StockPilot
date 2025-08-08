@@ -7,6 +7,7 @@ const cors = require('cors');
 
 //routers
 const authRoutes = require('./routes/authRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 
 const app = express(); // creazione dell'app con il framework express
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 //routes API
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Route di base per test
 app.get('/',(req, res) => {

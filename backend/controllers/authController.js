@@ -70,7 +70,7 @@ exports.loginUser = async (req, res) => {
 
         // Si imposta il refresh token in un cookie HTTPOnly
         res.cookie('jwt', refreshToken, {
-            httpOnly: true,
+            httpOnly: false,
             secure: process.env.NODE_ENV === 'production',
             sameSite:'Strict',
             maxAge: 7*24*60*60*1000
@@ -168,3 +168,56 @@ exports.logoutUser = async (req,res) => {
         res.status(500).json({ message: "Errore del server durante il logout." });
     }
 };
+
+exports.whoAmI = async (req,res) => {
+    try{
+        const user = await User.findById(req.userId)
+        console.log(req.userId);
+        res.json(user);
+    } catch (error) {
+        console.error("Errore recupero dati utente: ", error);
+        res.status(500).json({ message: "Errore del server durante il recupero dati utente." });
+    }
+}
+
+exports.edit = async (req,res) => {
+    const { email, cellulare } = req.body;
+
+    if (!email || !cellulare) {
+        return res.status(400).json({ message: "Email e cellulare sono obbligatori" });
+    }
+
+    try{
+        const user = await User.findById(req.userId);
+
+        if(!user){
+            return res.status(404).json({ message: "Utente non trovato" });
+        }
+
+        let updateFields = { email, cellulare }
+
+        console.log('Dati aggiornamento:', updateFields);
+        const updatedUser = await User.findByIdAndUpdate(
+            req.userId,
+            updateFields,
+            {
+                new: true,
+                runValidators: true,
+            }
+        )
+        console.log('Utente aggiornato:', updatedUser);
+
+
+        res.json({
+            nome: updatedUser.nome,
+            cognome: updatedUser.cognome,
+            email: updatedUser.email,
+            cellulare: updatedUser.cellulare,
+            dataNascita: updatedUser.dataNascita,
+            dataAssunzione: updatedUser.dataAssunzione,
+        });
+    } catch (error) {
+        console.error("Errore durante update del profilo: ", error);
+        res.status(500).json({ message: "Errore interno del server" });
+    }
+}

@@ -1,13 +1,24 @@
 import axios from 'axios';
 
 export async function checkAuth() {
-    const res = axios.get('http://localhost:5000/api/auth/check-auth', {
-        withCredentials: true
-    });
+    try {
+        const token = localStorage.getItem('accessToken');
 
-    if (res.ok) {
-        return true;
-    } else {
+        const res = await axios.get('http://localhost:5000/api/auth/check-auth', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            withCredentials: true
+        });
+
+        if (res.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (err) {
+
+        console.error('Errore durante il check auth:', err.response?.status);
         return false;
     }
 }

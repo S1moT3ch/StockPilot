@@ -10,97 +10,35 @@ import {
     Alert,
 } from "@mui/material";
 
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
+//import componenti
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
 
 const Login = () => {
-    const navigate = useNavigate();
 
     const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
-    const [successMsg, setSuccessMsg] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrorMsg('');
-        setSuccessMsg('');
-
-        const endpoint = isLogin ? 'api/auth/login' : '/api/auth/register';
-
-        try {
-            const res = await axios.post(
-                `http://localhost:5000/${endpoint}`,
-                { email, password },
-                { withCredentials: true }
-            );
-
-            setSuccessMsg(isLogin ? 'Login effettuato!' : 'Registrazione avvenuta con successo!');
-
-            navigate('/user');
-        } catch (err) {
-            const message = err.response?.data?.error?.message;
-            setErrorMsg(message);
-        }
-    };
-
+    const toggleForm = () => {
+        setIsLogin(prev => !prev);
+    }
     return (
         <Box>
-            <Paper>
-                <Typography>
-                    {isLogin ? 'Accedi' : 'Registrati'}
-                </Typography>
-                <form onSubmit = {handleSubmit}>
-                    <TextField
-                        label="Email"
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-
-                    <TextField
-                        label="Password"
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-
-                    {errorMsg && (
-                        <Alert severity="error">
-                            {errorMsg}
-                        </Alert>
-                    )}
-
-                    {successMsg && (
-                        <Alert severity="success">
-                            {successMsg}
-                        </Alert>
-                    )}
-
-                    <Button
-                        type="submit"
-                        variant="contained"
-                    >
-                        {isLogin ? 'Login' : 'Registrati'}
-                    </Button>
-
-                    <FormControlLabel
-                        control={
-                         <Switch
-                             checked={isLogin}
-                             onChange={() => setIsLogin((prev) => !prev)}
-                         />
-                        }
-                        label={isLogin ? 'Passa a Registrazione' : 'Passa a Login'}
-                    />
-                </form>
-            </Paper>
+            {isLogin ? (<LoginForm />) : (<RegisterForm setIsLogin={setIsLogin} />)}
+            <Typography>
+                {isLogin ? 'Sei un nuovo utente ?': 'Hai già un account?'}
+            </Typography>
+            <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={toggleForm}
+            >
+                {isLogin ? 'Registrati' : 'Accedi'}
+            </Button>
         </Box>
-    );
+    )
 };
 
 export default Login;

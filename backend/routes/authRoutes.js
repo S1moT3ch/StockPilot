@@ -15,11 +15,10 @@ router.get('/check-auth', verifyAccessToken, (req, res) => {
 });
 
 //informazioni utente
-router.get('/me', verifyAccessToken, async (req, res) => {
-    const user = await User.findById(req.userId).select;
-    res.json(user);
-});
+router.get('/me', verifyAccessToken, authController.whoAmI);
 
+//modifica dati utente
+router.put('/editMe', verifyAccessToken, authController.edit)
 
 //refresh del token
 router.post('refreshToken', authController.refreshToken);

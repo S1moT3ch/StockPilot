@@ -1,0 +1,105 @@
+import React, { useEffect, useState } from 'react';
+import {
+    Box,
+    Button,
+    Typography,
+    Paper,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    CircularProgress,
+} from '@mui/material';
+import axios from 'axios';
+
+const Orders = () => {
+    const [orders, setOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            const token = localStorage.getItem('accessToken');
+            try {
+                const res = await axios.get('http://localhost:5000/api/orders/all', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                });
+                setOrders(res.data);
+            } catch (error) {
+                console.error("Errore nel recupero ordini:", error);
+            }
+        };
+
+        fetchOrders();
+    }, [])
+
+
+    const handleViewDetails = async (orderId) => {
+        setLoading(true);
+        setOpen(true);
+        const token = localStorage.getItem('accessToken');
+        try {
+            const res = await axios.get(`http://localhost:5000/api/orders/${orderId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            });
+            setSelectedOrder(res.data);
+        } catch (error) {
+            console.error("Errore nel recupero dettagli ordine:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedOrder(null)
+    };
+
+    return (
+        <Box>
+            <Typography variant="h4" gutterBottom>Tutti gli ordini</Typography>
+
+            {orders.map((order) => (
+                <Paper
+                    key={order._id}
+                >
+                    <Box>
+                        <Typography variant="h6">Ordine #{order._id}</Typography>
+                        <Typography>Cliente: {order.cliente.nome} {order.cliente.cognome}</Typography>
+                        <Typography>Prodotto: {order.prodotto.nome}</Typography>
+                        <Typography>Data: {order.data}</Typography>
+                    </Box>
+                    <Button variant="outlined" onClick={() => handleViewDetails(order._id)}>
+                        Dettagli
+                    </Button>
+                </Paper>
+            ))}
+
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+                <DialogTitle>Dettagli Ordine</DialogTitle>
+                <DialogContent>
+                    {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
+                            <CircularProgress/>
+                        </Box>
+                    ) : selectedOrder ? (
+                        <Box>
+                            <Typography>Cliente: {selectedOrder.cliente.nome}</Typography>
+                            <Typography>Prodotto: {selectedOrder.prodotto.nome}</Typography>
+                            <Typography>Data: {selectedOrder.data}</Typography>
+                        </Box>
+                    ) : (
+                        <Typography>Errore nel caricamento dell'ordine.</Typography>
+                    )}
+                </DialogContent>
+            </Dialog>
+        </Box>
+    )
+}
+
+export default Orders;
