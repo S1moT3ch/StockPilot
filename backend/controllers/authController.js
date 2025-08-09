@@ -172,8 +172,7 @@ exports.logoutUser = async (req,res) => {
 exports.whoAmI = async (req,res) => {
     try{
         const user = await User.findById(req.userId)
-        console.log(req.userId);
-        res.json(user);
+        res.status(200).json(user);
     } catch (error) {
         console.error("Errore recupero dati utente: ", error);
         res.status(500).json({ message: "Errore del server durante il recupero dati utente." });

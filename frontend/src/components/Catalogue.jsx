@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
+import AddProduct from './AddProduct';
+
 const Catalogue = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -25,6 +27,7 @@ const Catalogue = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openAdd, setOpenAdd] = useState(false);
     const [newSegnalazione, setNewSegnalazione] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -101,9 +104,17 @@ const Catalogue = () => {
         }
     };
 
+    const handleViewAdd = () => {
+        setOpenAdd(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
         setSelectedProduct(null)
+    };
+
+    const handleCloseAdd = () => {
+        setOpenAdd(false);
     };
 
     const handleSegnalazioneChange = (event) => {
@@ -257,6 +268,24 @@ const Catalogue = () => {
                     )}
                 </DialogContent>
             </Dialog>
+
+            <Button variant='outlined' onClick={ handleViewAdd }>
+                Aggiungi un prodotto
+            </Button>
+
+            <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="sm">
+                <DialogTitle>Aggiungi un Prodotto</DialogTitle>
+                <DialogContent>
+                    <AddProduct
+                        categories={categories}
+                        setCategories={setCategories}
+                        handleCloseAdd={handleCloseAdd}
+                        setProduct={setProducts}
+                        setFilteredProducts={setFilteredProducts}
+                    />
+                </DialogContent>
+            </Dialog>
+
         </Box>
     )
 }

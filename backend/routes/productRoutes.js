@@ -12,6 +12,9 @@ router.get('/:productId', verifyAccessToken, productController.getProduct);
 //cancellazione di un prodotto
 router.delete('/:productId', verifyAccessToken, productController.deleteProduct);
 
+//creazione di un prodotto
+router.post('/new', verifyAccessToken, productController.addProduct);
+
 //update dell'ubicazione di un prodotto
 router.put('/:productId', verifyAccessToken, productController.updateProductLocation);
 

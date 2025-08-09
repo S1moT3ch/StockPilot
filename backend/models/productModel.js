@@ -27,8 +27,7 @@ const productSchema = new mongoose.Schema({
 
     ubicazione: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location',
-        required: [true, "L'ubicazione è obbligatoria"],
+        ref: 'Location'
     },
 
     dataIngresso: {
@@ -39,8 +38,7 @@ const productSchema = new mongoose.Schema({
 
     vettore: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vector',
-        required: [true, 'Il vettore è obbligatorio'],
+        ref: 'Vector'
     },
 
     inMagazzino: {

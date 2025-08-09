@@ -49,6 +49,30 @@ exports.deleteProduct = async (req, res) => {
     }
 }
 
+exports.addProduct = async (req,res) => {
+    const { id } = req.params;
+    const { nome, descrizione, categoria, quantità, ubicazione, dataIngresso, vettore, inMagazzino, segnalazione } = req.body;
+    try {
+        const newProduct = await Product.create({
+            nome,
+            descrizione,
+            categoria,
+            quantità,
+            ubicazione,
+            dataIngresso,
+            vettore,
+            inMagazzino,
+            segnalazione
+        });
+
+        const populatedProduct = await Product.findById(newProduct._id).populate('categoria');
+        res.status(201).json({ populatedProduct });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Errore nella creazione del prodotto:', error});
+    }
+}
+
 exports.updateProductLocation = async (req,res) => {
     const { productId } = req.params;
     const { locationId } = req.body;

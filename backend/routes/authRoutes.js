@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const chatController = require('../controllers/chatController');
 const  { verifyAccessToken } = require('../middlewares/authMiddleware');
 
 //registrazione utente
@@ -19,6 +20,9 @@ router.get('/me', verifyAccessToken, authController.whoAmI);
 
 //modifica dati utente
 router.put('/editMe', verifyAccessToken, authController.edit)
+
+//recupero di tutti gli utenti
+router.get('/all', verifyAccessToken, chatController.chat)
 
 //refresh del token
 router.post('refreshToken', authController.refreshToken);

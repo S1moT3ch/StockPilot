@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const http = require('http');
 const cors = require('cors');
+const socketio = require('socket.io');
 
 //routers
 const authRoutes = require('./routes/authRoutes');
@@ -13,9 +14,50 @@ const locationRoutes = require('./routes/locationRoutes');
 const productRouters = require('./routes/productRoutes');
 const categoryRouters = require('./routes/categoryRoutes');
 
-
 const app = express(); // creazione dell'app con il framework express
 const server = http.createServer(app);
+
+//avvio e gestione di socketIO
+const io = socketio(server, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    }
+});
+const messages = [];
+const onlineUsers = new Map()
+
+io.on('connection', (socket) => {
+    console.log('Utente connesso: ', socket.id);
+
+    socket.on('login', (userId) => {
+        onlineUsers.set(socket.id, userId);
+        console.log(`Utente ${userId} connesso con socket ${socket.id}`);
+    });
+
+    socket.on('sendMessage', ({ from, to, text }) => {
+        const timestamp = new Date();
+        const message = { from, to, text, timestamp };
+        messages.push(message);
+
+        for (const [sockId, userId] of onlineUsers.entries()) {
+            if (userId === to) {
+                io.to(sockId).emit('receiveMessage', message);
+            }
+        }
+
+        for (const [sockId, userId] of onlineUsers.entries()) {
+            if (userId === from) {
+                io.to(sockId).emit('receiveMessage', message);
+            }
+        }
+    });
+
+    socket.on('disconnect', () => {
+        onlineUsers.delete(socket.id);
+        console.log('User disconnected:', socket.id);
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 
