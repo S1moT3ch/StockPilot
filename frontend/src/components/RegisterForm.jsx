@@ -10,6 +10,10 @@ import {
     FormControlLabel,
     Alert,
 } from "@mui/material";
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style/RegisterForm.css';
 
 import axios from 'axios';
 
@@ -46,20 +50,12 @@ const RegisterForm = ({setIsLogin}) => {
 
     return (
         <Box>
-            <Paper>
-                <Typography>
+            <Paper className="register-form-container p-4 shadow rounded">
+                <Typography className="mb-4 text-center register-title">
                     Registrati
                 </Typography>
 
-                <form onSubmit={handleSubmit}>
-
-                    <TextField
-                        label="Username"
-                        type="text"
-                        required
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+                <form onSubmit={handleSubmit} className="d-flex flex-wrap gap-3">
 
                     <TextField
                         label="Nome"
@@ -67,6 +63,7 @@ const RegisterForm = ({setIsLogin}) => {
                         required
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
+                        className="form-input"
                     />
 
                     <TextField
@@ -75,18 +72,27 @@ const RegisterForm = ({setIsLogin}) => {
                         required
                         value={cognome}
                         onChange={(e) => setCognome(e.target.value)}
+                        className="form-input"
                     />
 
                     <TextField
-                        label="Data di Nascita"
-                        type="date"
+                        label="Username"
+                        type="text"
                         required
-                        value={dataNascita}
-                        onChange={(e) => setDataNascita(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="form-input"
                     />
+
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label="Data di Nascita"
+                            className="form-input"
+                            value={dataNascita}
+                            onChange={(newValue) => setDataNascita(newValue)}
+                            renderInput={(params) => <TextField {...params} className="form-input" required />}
+                        />
+                    </LocalizationProvider>
 
                     <TextField
                         label="Cellulare"
@@ -94,6 +100,7 @@ const RegisterForm = ({setIsLogin}) => {
                         required
                         value={cellulare}
                         onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
+                        className="form-input"
                     />
 
                     <TextField
@@ -102,6 +109,7 @@ const RegisterForm = ({setIsLogin}) => {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        className="form-input"
                     />
 
                     <TextField
@@ -110,6 +118,7 @@ const RegisterForm = ({setIsLogin}) => {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        className="form-input"
                     />
 
                     {errorMsg && (
@@ -124,12 +133,14 @@ const RegisterForm = ({setIsLogin}) => {
                         </Alert>
                     )}
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                    >
-                        Registrati
-                    </Button>
+                    <div className="w-100 text-center mt-3">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                        >
+                            Registrati
+                        </Button>
+                    </div>
                 </form>
             </Paper>
         </Box>

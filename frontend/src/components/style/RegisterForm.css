@@ -1,0 +1,14 @@
+.register-title {
+    color: #282c34 !important;
+    font-size: 20px !important;
+}
+
+.form-input {
+    flex: 0 0 48%;
+}
+
+@media (max-width: 760px) {
+    .form-input {
+        flex: 0 0 100%;
+    }
+}

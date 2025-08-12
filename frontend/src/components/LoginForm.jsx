@@ -9,6 +9,8 @@ import {
     FormControlLabel,
     Alert,
 } from "@mui/material";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style/LoginForm.css';
 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -44,12 +46,12 @@ const LoginForm = () => {
     };
 
     return (
-        <Box>
-            <Paper>
-                <Typography>
+        <Box className="container mt-5">
+            <Paper className="login-form-container p-4 shadow rounded">
+                <Typography variant="h5" className="mb-4 text-center access-title">
                     Accedi
                 </Typography>
-                <form onSubmit = {handleSubmit}>
+                <form onSubmit = {handleSubmit} className="d-flex flex-column gap-3">
                     <TextField
                         label="Email"
                         type="email"
@@ -81,6 +83,7 @@ const LoginForm = () => {
                     <Button
                         type="submit"
                         variant="contained"
+                        className="btn btn-primary login-button"
                     >
                         Login
                     </Button>

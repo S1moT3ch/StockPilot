@@ -9,6 +9,8 @@ import {
     FormControlLabel,
     Alert,
 } from "@mui/material";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style/Login.css';
 
 
 //import componenti
@@ -24,19 +26,25 @@ const Login = () => {
         setIsLogin(prev => !prev);
     }
     return (
-        <Box>
+        <Box className = "login-container container mt-5 p-4 shadow rounded">
             {isLogin ? (<LoginForm />) : (<RegisterForm setIsLogin={setIsLogin} />)}
-            <Typography>
+            <Typography
+                variant="body1"
+                className="custom-text text-center my-3"
+            >
                 {isLogin ? 'Sei un nuovo utente ?': 'Hai già un account?'}
             </Typography>
-            <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                onClick={toggleForm}
-            >
-                {isLogin ? 'Registrati' : 'Accedi'}
-            </Button>
+
+            <div className="d-flex justify-content-center">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    onClick={toggleForm}
+                    className="submit-button"
+                >
+                    {isLogin ? 'Registrati' : 'Accedi'}
+                </Button>
+            </div>
         </Box>
     )
 };
