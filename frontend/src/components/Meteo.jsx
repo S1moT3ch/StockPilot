@@ -50,7 +50,7 @@ const Meteo = () => {
                 <Typography>Vento: {meteo.wind.speed} m/s</Typography>
             </Box>
             <Box>
-                <img src={iconUrl} alt={meteo.weather[0].description} />
+                <img src={iconUrl} alt={meteo.weather[0].description} style={{width: "140%"}} />
             </Box>
         </Paper>
     );

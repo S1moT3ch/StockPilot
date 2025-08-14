@@ -15,19 +15,30 @@ import './style/Login.css';
 //import componenti
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import {checkAuth} from "../services/authService";
 
 
 const Login = () => {
     const navigate = useNavigate()
 
-    const [isLogin, setIsLogin] = useState(true)
+    const [isLogin, setIsLogin] = useState(true);
+    const [isAuth, setIsAuth] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            navigate('/user', {replace: true});
-        }
+
+        const verify = async() => {
+            const result = await checkAuth();
+            setIsAuth(result);
+            setLoading(false);
+        };
+
+        verify();
     }, [navigate]);
+
+    if (isAuth) {
+        navigate('/user', {replace: true});
+    }
 
     const toggleForm = () => {
         setIsLogin(prev => !prev);

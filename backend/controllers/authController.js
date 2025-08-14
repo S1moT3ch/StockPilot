@@ -205,6 +205,7 @@ exports.edit = async (req,res) => {
         )
 
         res.json({
+            username: updatedUser.username,
             nome: updatedUser.nome,
             cognome: updatedUser.cognome,
             email: updatedUser.email,

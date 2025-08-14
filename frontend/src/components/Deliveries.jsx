@@ -11,10 +11,11 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select
+    Select, Toolbar, AppBar
 } from '@mui/material';
 import axios from 'axios';
 import Options from "./Options";
+import Bar from "./Bar";
 
 const Deliveries = () => {
     const [deliveries, setDeliveries] = useState([]);
@@ -84,44 +85,47 @@ const Deliveries = () => {
 
     return (
         <Box>
-            <Typography variant="h4" gutterBottom>Registrazione consegne</Typography>
+            <Bar />
+            <Box>
 
-            {deliveries.map((delivery) => (
-                <Paper
-                    key={delivery._id}
-                >
-                    <Box>
-                        <Typography variant="h6">Consegna #{delivery._id}</Typography>
-                        <Typography>Azienda: {delivery.vettore.azienda}</Typography>
-                        <Typography>Corriere: {delivery.vettore.trasportatore}</Typography>
-                        <Typography>Prodotto: {delivery.prodotto.nome}</Typography>
-                        <Typography>Data: {delivery.data.split('T')[0]}</Typography>
-                    </Box>
-                    <Button variant="outlined" onClick={() => handleViewDetails(delivery._id)}>
-                        Dettagli
-                    </Button>
-                </Paper>
-            ))}
+                <Typography variant="h4" gutterBottom>Registrazione consegne</Typography>
 
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                <DialogTitle>Dettagli Consegna</DialogTitle>
-                <DialogContent>
-                    {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
-                            <CircularProgress/>
-                        </Box>
-                    ) : selectedDelivery ? (
+                {deliveries.map((delivery) => (
+                    <Paper
+                        key={delivery._id}
+                    >
                         <Box>
-                            <Typography>Azienda: {selectedDelivery.vettore.azienda}</Typography>
-                            <Typography>Corriere: {selectedDelivery.vettore.trasportatore}</Typography>
-                            <Typography>Prodotto</Typography>
-                            <Typography>Nome: {selectedDelivery.prodotto.nome}</Typography>
-                            <Typography>Descrizione: {selectedDelivery.prodotto.descrizione}</Typography>
-                            <Typography>Categoria: {selectedDelivery.prodotto.categoria.nome}</Typography>
-                            <Typography>Data dell'ordine: {selectedDelivery.data.split('T')[0]}</Typography>
+                            <Typography variant="h6">Consegna #{delivery._id}</Typography>
+                            <Typography>Azienda: {delivery.vettore.azienda}</Typography>
+                            <Typography>Corriere: {delivery.vettore.trasportatore}</Typography>
+                            <Typography>Prodotto: {delivery.prodotto.nome}</Typography>
+                            <Typography>Data: {delivery.data.split('T')[0]}</Typography>
+                        </Box>
+                        <Button variant="outlined" onClick={() => handleViewDetails(delivery._id)}>
+                            Dettagli
+                        </Button>
+                    </Paper>
+                ))}
+
+                <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+                    <DialogTitle>Dettagli Consegna</DialogTitle>
+                    <DialogContent>
+                        {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
+                                <CircularProgress/>
+                            </Box>
+                        ) : selectedDelivery ? (
                             <Box>
-                                <Typography>Ubicazione</Typography>
+                                <Typography>Azienda: {selectedDelivery.vettore.azienda}</Typography>
+                                <Typography>Corriere: {selectedDelivery.vettore.trasportatore}</Typography>
+                                <Typography>Prodotto</Typography>
+                                <Typography>Nome: {selectedDelivery.prodotto.nome}</Typography>
+                                <Typography>Descrizione: {selectedDelivery.prodotto.descrizione}</Typography>
+                                <Typography>Categoria: {selectedDelivery.prodotto.categoria.nome}</Typography>
+                                <Typography>Data dell'ordine: {selectedDelivery.data.split('T')[0]}</Typography>
                                 <Box>
-                                    {selectedDelivery.prodotto.inMagazzino ? (
+                                    <Typography>Ubicazione</Typography>
+                                    <Box>
+                                        {selectedDelivery.prodotto.inMagazzino ? (
                                             <Box>
                                                 <Typography>Corridoio: {selectedDelivery.prodotto.ubicazione.corridoio}</Typography>
                                                 <Typography>Scaffale: {selectedDelivery.prodotto.ubicazione.scaffale}</Typography>
@@ -130,18 +134,19 @@ const Deliveries = () => {
                                         ) : (
                                             <Options productId={selectedDelivery.prodotto._id} />
                                         )
-                                    }
+                                        }
+                                    </Box>
                                 </Box>
+                                <Button variant='outlined' onClick={() => { handleDelete(selectedDelivery._id); handleClose()}}>
+                                    Registra consegna
+                                </Button>
                             </Box>
-                            <Button variant='outlined' onClick={() => { handleDelete(selectedDelivery._id); handleClose()}}>
-                                Registra consegna
-                            </Button>
-                        </Box>
-                    ) : (
-                        <Typography>Errore nel caricamento dell'ordine.</Typography>
-                    )}
-                </DialogContent>
-            </Dialog>
+                        ) : (
+                            <Typography>Errore nel caricamento dell'ordine.</Typography>
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </Box>
         </Box>
     )
 }

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {
     Box,
@@ -8,8 +8,9 @@ import {
     Alert,
     Paper,
     Typography,
-    Grid
+    Grid, Toolbar, AppBar
 } from '@mui/material';
+import Bar from "./Bar";
 
 function UserProfile() {
     const [user, setUser] = useState(null);
@@ -98,86 +99,82 @@ function UserProfile() {
     if(!user) return <p>Nessun dato utente disponibile</p>;
 
     return (
-        <Box sx={{ maxWidth: 600, mx: 'auto', mt: 5}}>
-            <Paper elevation={3} sx={{ p: 4 }}>
+        <Box>
+            <Bar />
+            <Box sx={{ mx: 'auto', mt: 2}}>
+                <Paper elevation={3} sx={{ p: 4 }}>
 
-                <Typography variant="h5" gutterBottom>
-                    Profilo Utente
-                </Typography>
+                    <Typography variant="h5" gutterBottom>
+                        Profilo Utente
+                    </Typography>
 
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                    <Grid item xs={12} sm={6}>
-                        <Typography><strong>Username:</strong> {user.username}</Typography>
+                    <Grid container spacing={2} sx={{ mb: 2, display: "flex", flexDirection: "column" }}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Username:</strong> {user.username}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Nome:</strong> {user.nome}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Cognome:</strong> {user.cognome}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Data di Nascita:</strong> {user.dataNascita.split('T')[0]}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Data di Assunzione:</strong> {user.dataAssunzione.split('T')[0]}</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Typography><strong>Nome:</strong> {user.nome}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Typography><strong>Cognome:</strong> {user.cognome}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Typography><strong>Data di Nascita:</strong> {user.dataNascita.split('T')[0]}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Typography><strong>Data di Assunzione:</strong> {user.dataAssunzione.split('T')[0]}</Typography>
-                    </Grid>
-                </Grid>
 
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="cellulare"
-                            type="tel"
-                            value={cellulare}
-                            onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
-                            disabled={!editMode}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{
-                                '& .MuiInputBase-input.Mui-disabled' : {
-                                    color: 'black',
-                                    WebkitTextFillColor: 'black'
-                                },
-                            }}
-                        />
+                    <Grid container spacing={2} sx={{ mb: 2 }}>
+                        {editMode? (
+                            <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap:2 }}>
+                                <TextField
+                                    label="Cellulare"
+                                    type="tel"
+                                    value={cellulare}
+                                    onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
+                                    disabled={!editMode}
+                                />
 
-                        <TextField
-                            label="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={!editMode}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{
-                                '& .MuiInputBase-input.Mui-disabled' : {
-                                    color: 'black',
-                                    WebkitTextFillColor: 'black'
-                                },
-                            }}
-                        />
+                                <TextField
+                                    label="Email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={!editMode}
+                                />
+                            </Grid>
+                        ) : (
+                            <Grid container spacing={2} sx={{ mb: 2, display: "flex", flexDirection: "column"}}>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography><strong>Cellulare:</strong> {user.cellulare}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography><strong>Email:</strong> {user.email}</Typography>
+                                </Grid>
+                            </Grid>
+                        )}
                     </Grid>
-                </Grid>
 
-            {saveError && <Alert severity="error" sx={{ mt: 2 }}>{saveError}</Alert>}
-            {saveSuccess && <Alert severity="success" sx={{ mt: 2 }}>{saveSuccess}</Alert>}
+                    {saveError && <Alert severity="error" sx={{ mt: 2 }}>{saveError}</Alert>}
+                    {saveSuccess && <Alert severity="success" sx={{ mt: 2 }}>{saveSuccess}</Alert>}
 
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                    {!editMode ? (
-                        <Button variant="contained" color="primary" onClick={handleEditClick}>Modifica</Button>
-                    ) : (
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleSave}
-                        >
-                            {saving ? <CircularProgress /> : 'Salva'}
-                        </Button>
-                    )}
-                </Box>
-            </Paper>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        {!editMode ? (
+                            <Button variant="contained" color="primary" onClick={handleEditClick}>Modifica</Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleSave}
+                            >
+                                {saving ? <CircularProgress /> : 'Salva'}
+                            </Button>
+                        )}
+                    </Box>
+                </Paper>
+            </Box>
         </Box>
     )
 }

@@ -9,8 +9,9 @@ import {
     Typography,
     TextField,
     Button,
-    Paper,
+    Paper, Toolbar, AppBar,
 } from '@mui/material';
+import Bar from "./Bar";
 
 const socket = io('http://localhost:5000');
 
@@ -97,97 +98,100 @@ const Chat = () => {
     };
 
     return (
-        <Box display="flex" p={2} gap={2}>
-            <Paper>
-                <Typography variant="h6" p={2}>
-                    Utenti
-                </Typography>
-                <List>
-                    {users
-                        .filter((u) => u._id !==currentUser._id)
-                        .map((user) => (
-                            <ListItem
-                            button
-                            key={user._id}
-                            selected={selectedUser?._id === user._id}
-                            onClick={() => setSelectedUser(user)}
-                            >
-                                <ListItemText primary={user.username} />
-                            </ListItem>
-                        ))
-                    }
-                </List>
-            </Paper>
-
-            <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <Box p={2} borderBottom="1px solid #ccc">
-                    <Typography variant="h6">
-                        Chat con {selectedUser ? selectedUser.username : '...'}
+        <Box>
+            <Bar />
+            <Box display="flex" p={2} gap={2}>
+                <Paper>
+                    <Typography variant="h6" p={2}>
+                        Utenti
                     </Typography>
-                </Box>
+                    <List>
+                        {users
+                            .filter((u) => u._id !==currentUser._id)
+                            .map((user) => (
+                                <ListItem
+                                    button
+                                    key={user._id}
+                                    selected={selectedUser?._id === user._id}
+                                    onClick={() => setSelectedUser(user)}
+                                >
+                                    <ListItemText primary={user.username} />
+                                </ListItem>
+                            ))
+                        }
+                    </List>
+                </Paper>
 
-                <Box
-                    sx={{
-                        flexGrow: 1,
-                        p: 2,
-                        overflowY: 'auto',
-                        backgroundColor: '#f5f5f5',
-                    }}
-                >
-                    {messages
-                        .filter(
-                            (msg) =>
-                                (msg.from === currentUser._id && msg.to === selectedUser?._id) ||
-                                (msg.to === currentUser._id && msg.from === selectedUser?._id)
-                        )
-                        .map((msg, i) => (
-                            <Box
-                                key={i}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent:
-                                        msg.from === currentUser.id ? 'flex-end' : 'flex-start',
-                                    mb: 1,
-                                }}
-                            >
-                                <Paper
+                <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Box p={2} borderBottom="1px solid #ccc">
+                        <Typography variant="h6">
+                            Chat con {selectedUser ? selectedUser.username : '...'}
+                        </Typography>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            flexGrow: 1,
+                            p: 2,
+                            overflowY: 'auto',
+                            backgroundColor: '#f5f5f5',
+                        }}
+                    >
+                        {messages
+                            .filter(
+                                (msg) =>
+                                    (msg.from === currentUser._id && msg.to === selectedUser?._id) ||
+                                    (msg.to === currentUser._id && msg.from === selectedUser?._id)
+                            )
+                            .map((msg, i) => (
+                                <Box
+                                    key={i}
                                     sx={{
-                                        p: 1,
-                                        maxWidth: '70%',
-                                        bgcolor: msg.from === currentUser.id ? 'primary.main' : 'grey.300',
-                                        color: msg.from === currentUser.id ? 'primary.contrastText' : 'black',
+                                        display: 'flex',
+                                        justifyContent:
+                                            msg.from === currentUser.id ? 'flex-end' : 'flex-start',
+                                        mb: 1,
                                     }}
                                 >
-                                    <Typography variant="body2">{msg.text}</Typography>
-                                </Paper>
-                            </Box>
-                        ))}
-                    <div ref={messagesEndRef} />
-                </Box>
+                                    <Paper
+                                        sx={{
+                                            p: 1,
+                                            maxWidth: '70%',
+                                            bgcolor: msg.from === currentUser.id ? 'primary.main' : 'grey.300',
+                                            color: msg.from === currentUser.id ? 'primary.contrastText' : 'black',
+                                        }}
+                                    >
+                                        <Typography variant="body2">{msg.text}</Typography>
+                                    </Paper>
+                                </Box>
+                            ))}
+                        <div ref={messagesEndRef} />
+                    </Box>
 
-                <Box
-                    p={2}
-                    display="flex"
-                    gap={1}
-                    component="form"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSend();
-                    }}
-                >
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        placeholder="Scrivi un messaggio..."
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        disabled={!selectedUser}
-                    />
-                    <Button variant="contained" type="submit" disabled={!selectedUser || !text.trim()}>
-                        Invia
-                    </Button>
-                </Box>
-            </Paper>
+                    <Box
+                        p={2}
+                        display="flex"
+                        gap={1}
+                        component="form"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSend();
+                        }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            placeholder="Scrivi un messaggio..."
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            disabled={!selectedUser}
+                        />
+                        <Button variant="contained" type="submit" disabled={!selectedUser || !text.trim()}>
+                            Invia
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
         </Box>
     )
 }

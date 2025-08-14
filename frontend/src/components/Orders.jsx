@@ -7,9 +7,10 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    CircularProgress,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
+import Bar from "./Bar";
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -80,53 +81,56 @@ const Orders = () => {
 
     return (
         <Box>
-            <Typography variant="h4" gutterBottom>Tutti gli ordini</Typography>
+            <Bar />
+            <Box>
+                <Typography variant="h4" gutterBottom>Tutti gli ordini</Typography>
 
-            {orders.map((order) => (
-                <Paper
-                    key={order._id}
-                >
-                    <Box>
-                        <Typography variant="h6">Ordine #{order._id}</Typography>
-                        <Typography>Cliente: {order.cliente.nome} {order.cliente.cognome}</Typography>
-                        <Typography>Prodotto: {order.prodotto.nome}</Typography>
-                        <Typography>Data: {order.data.split('T')[0]}</Typography>
-                    </Box>
-                    <Button variant="outlined" onClick={() => handleViewDetails(order._id)}>
-                        Dettagli
-                    </Button>
-                </Paper>
-            ))}
-
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                <DialogTitle>Dettagli Ordine</DialogTitle>
-                <DialogContent>
-                    {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
-                            <CircularProgress/>
-                        </Box>
-                    ) : selectedOrder ? (
+                {orders.map((order) => (
+                    <Paper
+                        key={order._id}
+                    >
                         <Box>
-                            <Typography>Cliente: {selectedOrder.cliente.nome} {selectedOrder.cliente.cognome}</Typography>
-                            <Typography>Indirizzo: {selectedOrder.cliente.indirizzo}, {selectedOrder.cliente.città}</Typography>
-                            <Typography>Prodotto: {selectedOrder.prodotto.nome}</Typography>
-                            <Box>
-                                <Typography>Descrizione: {selectedOrder.prodotto.descrizione}</Typography>
-                                <Typography>Categoria: {selectedOrder.prodotto.categoria.nome}</Typography>
-                                <Typography>Ubicazione</Typography>
-                                <Typography>Corridoio: {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
-                                <Typography>Scaffale: {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
-                                <Typography>Mensola: {selectedOrder.prodotto.ubicazione.mensola}</Typography>
-                            </Box>
-                            <Typography>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
-                            <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}>
-                                Evadi ordine
-                            </Button>
+                            <Typography variant="h6">Ordine #{order._id}</Typography>
+                            <Typography>Cliente: {order.cliente.nome} {order.cliente.cognome}</Typography>
+                            <Typography>Prodotto: {order.prodotto.nome}</Typography>
+                            <Typography>Data: {order.data.split('T')[0]}</Typography>
                         </Box>
-                    ) : (
-                        <Typography>Errore nel caricamento dell'ordine.</Typography>
-                    )}
-                </DialogContent>
-            </Dialog>
+                        <Button variant="outlined" onClick={() => handleViewDetails(order._id)}>
+                            Dettagli
+                        </Button>
+                    </Paper>
+                ))}
+
+                <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+                    <DialogTitle>Dettagli Ordine</DialogTitle>
+                    <DialogContent>
+                        {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
+                                <CircularProgress/>
+                            </Box>
+                        ) : selectedOrder ? (
+                            <Box>
+                                <Typography>Cliente: {selectedOrder.cliente.nome} {selectedOrder.cliente.cognome}</Typography>
+                                <Typography>Indirizzo: {selectedOrder.cliente.indirizzo}, {selectedOrder.cliente.città}</Typography>
+                                <Typography>Prodotto: {selectedOrder.prodotto.nome}</Typography>
+                                <Box>
+                                    <Typography>Descrizione: {selectedOrder.prodotto.descrizione}</Typography>
+                                    <Typography>Categoria: {selectedOrder.prodotto.categoria.nome}</Typography>
+                                    <Typography>Ubicazione</Typography>
+                                    <Typography>Corridoio: {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
+                                    <Typography>Scaffale: {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
+                                    <Typography>Mensola: {selectedOrder.prodotto.ubicazione.mensola}</Typography>
+                                </Box>
+                                <Typography>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
+                                <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}>
+                                    Evadi ordine
+                                </Button>
+                            </Box>
+                        ) : (
+                            <Typography>Errore nel caricamento dell'ordine.</Typography>
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </Box>
         </Box>
     )
 }

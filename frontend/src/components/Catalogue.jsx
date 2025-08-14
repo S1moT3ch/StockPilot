@@ -12,11 +12,12 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select,
+    Select, Toolbar, AppBar,
 } from '@mui/material';
 import axios from 'axios';
 
 import AddProduct from './AddProduct';
+import Bar from "./Bar";
 
 const Catalogue = () => {
     const [products, setProducts] = useState([]);
@@ -170,9 +171,11 @@ const Catalogue = () => {
 
     return (
         <Box>
+            <Bar />
+
             <Typography variant="h4" gutterBottom>Catalogo Prodotti</Typography>
 
-            <Box display="flex" gap={2} mb={4}>
+            <Box display="flex" gap={2} mb={4} mt={6}>
                 <TextField
                     fullWidth
                     label="Cerca prodotto"
@@ -285,7 +288,6 @@ const Catalogue = () => {
                     />
                 </DialogContent>
             </Dialog>
-
         </Box>
     )
 }

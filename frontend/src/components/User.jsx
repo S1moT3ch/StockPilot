@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
+    AppBar,
+    Toolbar,
     Box,
     Button,
     Typography,
@@ -10,8 +12,10 @@ import {
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
-import Meteo from './Meteo'
-import News from './News'
+import Meteo from './Meteo';
+import News from './News';
+import Bar from './Bar';
+
 
 const User = () => {
     const [user, setUser] = useState(null);
@@ -62,68 +66,82 @@ const User = () => {
     }
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Typography variant="h4" gutterBottom sx={{ m: 3}}>
-                Benvenuto{user?.nome ?`, ${user.nome}` : ''}!
-            </Typography>
+        <Box>
+            <Bar />
+            <Box sx={{ p: 3 }}>
+                <Typography variant="h4" gutterBottom sx={{ m: 3}}>
+                    Benvenuto{user?.nome ?`, ${user.nome}` : ''}!
+                </Typography>
 
-            <Grid container spacing={2} mt={2}>
+                <Grid container spacing={2} mt={2} sx={{display: "flex", justifyContent: "space-evenly"}}>
 
-                <Grid item xs={12} sm={9} container direction="column" spacing={2}>
-                    <Grid item>
-                        <Meteo />
+                    <Grid item xs={12} md={9} xl={9} container direction="column" spacing={2} sx={{ width: "60vw" }}>
+                        <Grid item>
+                            <Meteo />
+                        </Grid>
+
+                        <Grid item>
+                            <News />
+                        </Grid>
                     </Grid>
 
-                    <Grid item>
-                        <News />
+                    <Grid item xs={12} sm={3} xl={9} sx={{ display: 'flex', flexDirection: 'column' , gap:2}}>
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/profile')}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
+                        >
+                            Area Riservata
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/orders')}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
+                        >
+                            Ordini
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/deliveries')}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
+                        >
+                            Consegne
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/catalogue')}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
+                        >
+                            Catalogo
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/chat')}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
+                        >
+                            Chat
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={handleLogout}
+                            size="large"
+                            sx={{ fontSize: "1.2rem", paddingY: 1.5, backgroundColor:"red" }}
+                        >
+                            Logout
+                        </Button>
                     </Grid>
                 </Grid>
-
-                <Grid item xs={12} sm={3} sx={{ display: 'flex', flexDirection: 'column' , gap:2}}>
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/profile')}
-                    >
-                        Area Riservata
-                    </Button>
-
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/orders')}
-                    >
-                        Ordini
-                    </Button>
-
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/deliveries')}
-                    >
-                        Consegne
-                    </Button>
-
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/catalogue')}
-                    >
-                        Catalogo
-                    </Button>
-
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/chat')}
-                    >
-                        Chat
-                    </Button>
-                </Grid>
-
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </Button>
-            </Grid>
+            </Box>
         </Box>
     );
 };
