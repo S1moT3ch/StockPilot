@@ -195,7 +195,6 @@ exports.edit = async (req,res) => {
 
         let updateFields = { email, cellulare }
 
-        console.log('Dati aggiornamento:', updateFields);
         const updatedUser = await User.findByIdAndUpdate(
             req.userId,
             updateFields,
@@ -204,8 +203,6 @@ exports.edit = async (req,res) => {
                 runValidators: true,
             }
         )
-        console.log('Utente aggiornato:', updatedUser);
-
 
         res.json({
             nome: updatedUser.nome,

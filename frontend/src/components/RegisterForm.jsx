@@ -6,12 +6,16 @@ import {
     Button,
     Typography,
     Paper,
-    Switch,
-    FormControlLabel,
+    IconButton,
+    InputAdornment,
     Alert,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import {
+    Visibility,
+    VisibilityOff
+} from "@mui/icons-material";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/RegisterForm.css';
 
@@ -26,6 +30,7 @@ const RegisterForm = ({setIsLogin}) => {
     const [cellulare, setCellulare] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
 
@@ -47,6 +52,14 @@ const RegisterForm = ({setIsLogin}) => {
             setErrorMsg(message);
         }
     };
+
+    const handleShowPassword = () => {
+        setShowPassword((prev) => !prev);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    }
 
     return (
         <Box>
@@ -86,7 +99,7 @@ const RegisterForm = ({setIsLogin}) => {
 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                            label="Data di Nascita"
+                            label="Data di Nascita*"
                             className="form-input"
                             value={dataNascita}
                             onChange={(newValue) => setDataNascita(newValue)}
@@ -114,11 +127,25 @@ const RegisterForm = ({setIsLogin}) => {
 
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword? "text" : "password"}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="form-input"
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle pssw visibility"
+                                        onClick={handleShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
 
                     {errorMsg && (

@@ -4,6 +4,15 @@
     max-width: 600px;
 }
 
+.logo-container {
+    text-align: center;
+}
+
+.logo-container img {
+    width: 70%;
+    height: auto;
+}
+
 .custom-text {
     font-weight: bold;
     font-size: 1rem !important;

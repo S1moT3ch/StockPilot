@@ -10,6 +10,9 @@ import {
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
+import Meteo from './Meteo'
+import News from './News'
+
 const User = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -38,6 +41,18 @@ const User = () => {
         fetchUser();
     }, []);
 
+    const handleLogout = async () => {
+        try {
+            localStorage.removeItem('accessToken');
+            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+                withCredentials: true,
+            });
+            navigate('/login');
+        } catch (error) {
+            console.error("Errore durante il logout: ", error);
+        }
+    }
+
     if (loading) {
         return (
             <Box display="flex" justifyContent="center">
@@ -47,13 +62,24 @@ const User = () => {
     }
 
     return (
-        <Box>
-            <Typography variant="h4" gutterBottom>
+        <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom sx={{ m: 3}}>
                 Benvenuto{user?.nome ?`, ${user.nome}` : ''}!
             </Typography>
 
             <Grid container spacing={2} mt={2}>
-                <div>
+
+                <Grid item xs={12} sm={9} container direction="column" spacing={2}>
+                    <Grid item>
+                        <Meteo />
+                    </Grid>
+
+                    <Grid item>
+                        <News />
+                    </Grid>
+                </Grid>
+
+                <Grid item xs={12} sm={3} sx={{ display: 'flex', flexDirection: 'column' , gap:2}}>
                     <Button
                         variant="contained"
                         onClick={() => navigate('/profile')}
@@ -88,34 +114,12 @@ const User = () => {
                     >
                         Chat
                     </Button>
-                </div>
-
-                <Grid item xs={12} sm={6}>
-                    <Paper>
-                        <Typography>Meteo Bari</Typography>
-                    </Paper>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                    <Paper>
-                        <Typography>News</Typography>
-                    </Paper>
                 </Grid>
 
                 <Button
                     variant="contained"
                     color="secondary"
-                    onClick={ async () => {
-                        try {
-                            localStorage.removeItem('accessToken');
-                            await axios.post('http://localhost:5000/api/auth/logout', {}, {
-                                withCredentials: true,
-                            });
-                            navigate('/login');
-                        } catch (error) {
-                            console.error("Errore durante il logout: ", error);
-                        }
-                    }}
+                    onClick={handleLogout}
                 >
                     Logout
                 </Button>

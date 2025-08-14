@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
     Box,
-    TextField,
     Button,
     Typography,
     Paper,
-    Switch,
-    FormControlLabel,
-    Alert,
 } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/Login.css';
@@ -19,14 +18,26 @@ import RegisterForm from "./RegisterForm";
 
 
 const Login = () => {
+    const navigate = useNavigate()
 
-    const [isLogin, setIsLogin] = useState(true);
+    const [isLogin, setIsLogin] = useState(true)
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            navigate('/user', {replace: true});
+        }
+    }, [navigate]);
 
     const toggleForm = () => {
         setIsLogin(prev => !prev);
     }
     return (
-        <Box className = "login-container container mt-5 p-4 shadow rounded">
+        <Box className = "login-container container mt-4 p-4 shadow rounded">
+
+            <div className="logo-container">
+                <img src="/StockPilot_icon_full_no_bg.png" alt="Logo StockPilot" className="logo"/>
+            </div>
             {isLogin ? (<LoginForm />) : (<RegisterForm setIsLogin={setIsLogin} />)}
             <Typography
                 variant="body1"

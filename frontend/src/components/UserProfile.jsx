@@ -1,6 +1,15 @@
 import {useEffect, useState} from 'react';
 import axios from "axios";
-import { TextField, Button, Box, CircularProgress, Alert } from '@mui/material';
+import {
+    Box,
+    TextField,
+    Button,
+    CircularProgress,
+    Alert,
+    Paper,
+    Typography,
+    Grid
+} from '@mui/material';
 
 function UserProfile() {
     const [user, setUser] = useState(null);
@@ -89,62 +98,86 @@ function UserProfile() {
     if(!user) return <p>Nessun dato utente disponibile</p>;
 
     return (
-        <Box>
-            <h2>Profilo Utente</h2>
-            <p>Username: {user.username}</p>
-            <p>Nome: {user.nome}</p>
-            <p>Cognome: {user.cognome}</p>
-            <p>Data di Nascita: {user.dataNascita.split('T')[0]}</p>
-            <p>Data di Assunzione: {user.dataAssunzione.split('T')[0]}</p>
+        <Box sx={{ maxWidth: 600, mx: 'auto', mt: 5}}>
+            <Paper elevation={3} sx={{ p: 4 }}>
 
-            <TextField
-                label="cellulare"
-                type="tel"
-                value={cellulare}
-                onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
-                disabled={!editMode}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                sx={{
-                '& .MuiInputBase-input.Mui-disabled' : {
-                    color: 'black',
-                    WebkitTextFillColor: 'black'
-                },
-                }}
-            />
+                <Typography variant="h5" gutterBottom>
+                    Profilo Utente
+                </Typography>
 
-            <TextField
-                label="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={!editMode}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                sx={{
-                    '& .MuiInputBase-input.Mui-disabled' : {
-                        color: 'black',
-                        WebkitTextFillColor: 'black'
-                    },
-                }}
-            />
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                    <Grid item xs={12} sm={6}>
+                        <Typography><strong>Username:</strong> {user.username}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography><strong>Nome:</strong> {user.nome}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography><strong>Cognome:</strong> {user.cognome}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography><strong>Data di Nascita:</strong> {user.dataNascita.split('T')[0]}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography><strong>Data di Assunzione:</strong> {user.dataAssunzione.split('T')[0]}</Typography>
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="cellulare"
+                            type="tel"
+                            value={cellulare}
+                            onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
+                            disabled={!editMode}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            sx={{
+                                '& .MuiInputBase-input.Mui-disabled' : {
+                                    color: 'black',
+                                    WebkitTextFillColor: 'black'
+                                },
+                            }}
+                        />
+
+                        <TextField
+                            label="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={!editMode}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            sx={{
+                                '& .MuiInputBase-input.Mui-disabled' : {
+                                    color: 'black',
+                                    WebkitTextFillColor: 'black'
+                                },
+                            }}
+                        />
+                    </Grid>
+                </Grid>
 
             {saveError && <Alert severity="error" sx={{ mt: 2 }}>{saveError}</Alert>}
             {saveSuccess && <Alert severity="success" sx={{ mt: 2 }}>{saveSuccess}</Alert>}
 
-            {!editMode ? (
-                <Button variant="contained" color="primary" onClick={handleEditClick}>Modifica</Button>
-            ) : (
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleSave}
-                >
-                    {saving ? <CircularProgress /> : 'Salva'}
-                </Button>
-            )}
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    {!editMode ? (
+                        <Button variant="contained" color="primary" onClick={handleEditClick}>Modifica</Button>
+                    ) : (
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleSave}
+                        >
+                            {saving ? <CircularProgress /> : 'Salva'}
+                        </Button>
+                    )}
+                </Box>
+            </Paper>
         </Box>
     )
 }
