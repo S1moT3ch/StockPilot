@@ -43,7 +43,7 @@ const Options = ({productId}) => {
     const handleUpdateProductLocation = async (productId, locationId) => {
         try{
             const token = localStorage.getItem('accessToken');
-            const response = await axios.put(`http://localhost:5000/api/products/${productId}`, {locationId}, {
+            const response = await axios.put(`http://localhost:5000/api/products/location/${productId}`, {locationId}, {
                 headers :{
                     Authorization: `Bearer ${token}`,
                 },

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import Bar from "./Bar";
+import Options from "./Options";
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -65,6 +66,8 @@ const Orders = () => {
 
     const handleDelete = async (orderId) => {
         const token = localStorage.getItem('accessToken')
+        const order = orders.find(o => o._id === orderId);
+
         try {
             await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
                 headers: {
@@ -72,6 +75,15 @@ const Orders = () => {
                 },
                 withCredentials: true,
             });
+
+            await axios.put(`http://localhost:5000/api/products/order/${order.prodotto._id}`, {
+                quantita: order.quantita,
+            },{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
             setOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
             handleClose();
         } catch (error) {
@@ -115,10 +127,22 @@ const Orders = () => {
                                 <Box>
                                     <Typography>Descrizione: {selectedOrder.prodotto.descrizione}</Typography>
                                     <Typography>Categoria: {selectedOrder.prodotto.categoria.nome}</Typography>
-                                    <Typography>Ubicazione</Typography>
-                                    <Typography>Corridoio: {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
-                                    <Typography>Scaffale: {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
-                                    <Typography>Mensola: {selectedOrder.prodotto.ubicazione.mensola}</Typography>
+                                    <Typography>Quantità ordinata: {selectedOrder.quantita}</Typography>
+                                    <Box>
+                                        <Typography>Ubicazione</Typography>
+                                        <Box>
+                                            {selectedOrder.prodotto.inMagazzino ? (
+                                                <Box>
+                                                    <Typography>Corridoio: {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
+                                                    <Typography>Scaffale: {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
+                                                    <Typography>Mensola: {selectedOrder.prodotto.ubicazione.mensola}</Typography>
+                                                </Box>
+                                            ) : (
+                                                <Typography>Prodotto non ancora in magazzino. Controlla la sua posizione nel catalogo prodotti</Typography>
+                                            )
+                                            }
+                                        </Box>
+                                    </Box>
                                 </Box>
                                 <Typography>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
                                 <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}>

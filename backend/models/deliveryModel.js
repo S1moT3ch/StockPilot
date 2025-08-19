@@ -14,6 +14,11 @@ const deliverySchema = new mongoose.Schema({
         required: [true, 'Il prodotto è obbligatorio']
     },
 
+    quantita: {
+        type: Number,
+        required: true
+    },
+
     data: {
         type: Date,
         default: Date.now,

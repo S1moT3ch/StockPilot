@@ -44,8 +44,8 @@ const Meteo = () => {
             <Box>
                 <Typography variant="h6">Meteo</Typography>
                 <Typography variant="h6">{meteo.name}</Typography>
-                <Typography>Temperatura: {meteo.main.temp}°C</Typography>
-                <Typography>Descrizione: {meteo.weather[0].description}</Typography>
+                <Typography>Temperatura: {Math.round(meteo.main.temp)}°C</Typography>
+                <Typography>Percepita: {Math.round(meteo.main.feels_like)}°C</Typography>
                 <Typography>Umidità: {meteo.main.humidity}%</Typography>
                 <Typography>Vento: {meteo.wind.speed} m/s</Typography>
             </Box>

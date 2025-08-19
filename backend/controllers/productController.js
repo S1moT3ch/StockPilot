@@ -90,6 +90,40 @@ exports.updateProductLocation = async (req,res) => {
     }
 }
 
+exports.updateOrderProductAmount = async (req,res) => {
+    const { productId } = req.params;
+    const { quantita } = req.body;
+    try {
+        const product = await Product.findByIdAndUpdate(productId, {
+            $inc: {quantità: -quantita},
+            inMagazzino: true
+        }, {new: true});
+        return res.status(200).json(product);
+        if(!product) {
+            return res.status(404).json({ message: 'Prodotto non trovato'});
+        }
+    } catch (error) {
+        console.error("Errore nell'update della quantità del prodotto:", error);
+    }
+}
+
+exports.updateDeliveryProductAmount = async (req,res) => {
+    const { productId } = req.params;
+    const { quantita } = req.body;
+    try {
+        const product = await Product.findByIdAndUpdate(productId, {
+            $inc: {quantità: quantita},
+            inMagazzino: true
+        }, {new: true});
+        return res.status(200).json(product);
+        if(!product) {
+            return res.status(404).json({ message: 'Prodotto non trovato'});
+        }
+    } catch (error) {
+        console.error("Errore nell'update della quantità del prodotto:", error);
+    }
+}
+
 exports.addWarning = async (req,res) => {
     const {productId, segnalazione} = req.body;
 

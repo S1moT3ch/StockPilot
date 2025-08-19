@@ -18,6 +18,7 @@ import axios from 'axios';
 
 import AddProduct from './AddProduct';
 import Bar from "./Bar";
+import Options from "./Options";
 
 const Catalogue = () => {
     const [products, setProducts] = useState([]);
@@ -230,10 +231,21 @@ const Catalogue = () => {
                             <Typography>Descrizione: {selectedProduct.descrizione}</Typography>
                             <Typography>Quantità: {selectedProduct.quantità}</Typography>
                             <Typography>Categoria: {selectedProduct.categoria.nome}</Typography>
-                            <Typography>Ubicazione</Typography>
-                            <Typography>Corridoio: {selectedProduct.ubicazione.corridoio}</Typography>
-                            <Typography>Scaffale: {selectedProduct.ubicazione.scaffale}</Typography>
-                            <Typography>Mensola: {selectedProduct.ubicazione.mensola}</Typography>
+                            <Box>
+                                <Typography>Ubicazione</Typography>
+                                <Box>
+                                    {selectedProduct.inMagazzino ? (
+                                        <Box>
+                                            <Typography>Corridoio: {selectedProduct.ubicazione.corridoio}</Typography>
+                                            <Typography>Scaffale: {selectedProduct.ubicazione.scaffale}</Typography>
+                                            <Typography>Mensola: {selectedProduct.ubicazione.mensola}</Typography>
+                                        </Box>
+                                    ) : (
+                                        <Options productId={selectedProduct._id} />
+                                    )
+                                    }
+                                </Box>
+                            </Box>
                             <Box>
                                 {selectedProduct.segnalazione && (
                                     <Typography>Segnalazione: {selectedProduct.segnalazione}</Typography>

@@ -48,7 +48,6 @@ exports.deleteDelivery = async (req, res) => {
     const { deliveryId } = req.params;
     try{
         const delivery = await Delivery.findByIdAndDelete( deliveryId );
-        console.log( delivery);
         if(!delivery) {
             return res.status(404).json({ message: 'Ordine non trovato'});
         }

@@ -16,7 +16,13 @@ router.delete('/:productId', verifyAccessToken, productController.deleteProduct)
 router.post('/new', verifyAccessToken, productController.addProduct);
 
 //update dell'ubicazione di un prodotto
-router.put('/:productId', verifyAccessToken, productController.updateProductLocation);
+router.put('/location/:productId', verifyAccessToken, productController.updateProductLocation);
+
+//update della quantità di un prodotto per ordini da evadere
+router.put('/order/:productId', verifyAccessToken, productController.updateOrderProductAmount);
+
+//update della quantità di un prodotto per consegne da registrare
+router.put('/delivery/:productId', verifyAccessToken, productController.updateDeliveryProductAmount);
 
 //aggiornamento segnalazione di un prodotto
 router.post('/segnalazione', verifyAccessToken, productController.addWarning);

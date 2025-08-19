@@ -94,9 +94,31 @@ function UserProfile() {
         }
     }
 
+    const calcolaAnzianita = (dataAssunzione) => {
+        const assunzione = new Date(dataAssunzione);
+        const oggi = new Date();
+
+        let anni = oggi.getFullYear() - assunzione.getFullYear();
+        let mesi = oggi.getMonth() - assunzione.getMonth();
+        let giorni = oggi.getDate() - assunzione.getDate();
+
+        if (giorni <0) {
+            mesi -= 1;
+            const giorniMesePrec = new Date(oggi.getFullYear(), oggi.getMonth(), 0).getDate();
+            giorni += giorniMesePrec
+        }
+
+        if (mesi <0) {
+            anni -= 1;
+            mesi += 12;
+        }
+
+        return `${anni} anni, ${mesi} mesi e ${giorni} giorni`;
+    }
+
     if (loading) return <p>Caricamento dati...</p>;
     if (error) return <p>Errore: {error}</p>;
-    if(!user) return <p>Nessun dato utente disponibile</p>;
+    if (!user) return <p>Nessun dato utente disponibile</p>;
 
     return (
         <Box>
@@ -123,6 +145,9 @@ function UserProfile() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <Typography><strong>Data di Assunzione:</strong> {user.dataAssunzione.split('T')[0]}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography><strong>Anzianità:</strong> {calcolaAnzianita(user.dataAssunzione)}</Typography>
                         </Grid>
                     </Grid>
 

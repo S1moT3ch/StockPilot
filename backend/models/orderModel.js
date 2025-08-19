@@ -14,6 +14,11 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
 
+    quantita: {
+        type: Number,
+        required: true
+    },
+
     data: {
         type: Date,
         default : Date.now,

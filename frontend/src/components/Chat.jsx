@@ -36,14 +36,14 @@ const Chat = () => {
                     withCredentials: true,
                 });
                 setUsers(res.data);
+
             } catch (error) {
-                console.error("Errore nel recupero ordini:", error);
+                console.error("Errore nel recupero dati di tutti gli utenti:", error);
             }
         };
 
         const fetchCurrentUser = async () => {
             const token = localStorage.getItem('accessToken');
-            if (!token) return console.error("No token found");
             try {
                 const res = await axios.get('http://localhost:5000/api/auth/me', {
                     headers: {
@@ -53,10 +53,13 @@ const Chat = () => {
                     withCredentials: true,
                 });
                 setCurrentUser(res.data);
-            } catch (err) {
-                console.error('Errore nel recupero dati utente:', err);
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Errore nel recupero dati utente corrente:", error);
+                setLoading(false);
             }
-        };
+        }
 
         fetchUsers();
         fetchCurrentUser();
@@ -70,21 +73,36 @@ const Chat = () => {
             if (
                 message.from === currentUser._id ||
                 message.to === currentUser._id
-        ) {
-            setMessages((prev) => [...prev, message]);
+            ) {
+                if (message.from !== currentUser._id && Notification.permission === "granted") {
+
+                    const sender = users.find(u => u._id === message.from);
+                    const senderName = sender ? sender.username : "Sconosciuto";
+
+                    new Notification("Nuovo messaggio", {
+                        body: `${senderName}`
+                    });
+                }
+                setMessages((prev) => [...prev, message]);
             }
         });
 
         return () => {
             socket.off('receiveMessage');
         };
-    }, [currentUser]);
+    }, [users, currentUser]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
+
+    useEffect(() => {
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+    }, []);
 
     const handleSend = () => {
         if (selectedUser && text.trim()) {
@@ -96,6 +114,10 @@ const Chat = () => {
             setText('');
         }
     };
+
+    if (loading) {
+        return <Typography>Caricamento...</Typography>;
+    }
 
     return (
         <Box>
@@ -157,8 +179,8 @@ const Chat = () => {
                                         sx={{
                                             p: 1,
                                             maxWidth: '70%',
-                                            bgcolor: msg.from === currentUser.id ? 'primary.main' : 'grey.300',
-                                            color: msg.from === currentUser.id ? 'primary.contrastText' : 'black',
+                                            bgcolor: msg.from === currentUser._id ? 'primary.main' : 'grey.300',
+                                            color: msg.from === currentUser._id ? 'primary.contrastText' : 'black',
                                         }}
                                     >
                                         <Typography variant="body2">{msg.text}</Typography>

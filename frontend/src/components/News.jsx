@@ -14,7 +14,7 @@ const News = () => {
         const fetchNews = async () => {
             try {
                 const res = await axios.get(
-                    `https://newsapi.org/v2/top-headlines?sources=ansa&apiKey=${API_KEY}`
+                    `https://newsapi.org/v2/everything?q=italia&sortBy=publishedAt&apiKey=${API_KEY}`
                 );
                 setNews(res.data.articles);
             } catch (err) {

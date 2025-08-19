@@ -69,12 +69,21 @@ const Deliveries = () => {
 
     const handleDelete = async (deliveryId) => {
         const token = localStorage.getItem('accessToken')
+        const delivery = deliveries.find(d => d._id === deliveryId);
         try {
             await axios.delete(`http://localhost:5000/api/deliveries/${deliveryId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 withCredentials: true,
+            });
+
+            await axios.put(`http://localhost:5000/api/products/delivery/${delivery.prodotto._id}`, {
+                quantita: delivery.quantita,
+            },{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
             });
             setDeliveries(prevDeliveries => prevDeliveries.filter(delivery => delivery._id !== deliveryId));
             handleClose();
@@ -121,6 +130,7 @@ const Deliveries = () => {
                                 <Typography>Nome: {selectedDelivery.prodotto.nome}</Typography>
                                 <Typography>Descrizione: {selectedDelivery.prodotto.descrizione}</Typography>
                                 <Typography>Categoria: {selectedDelivery.prodotto.categoria.nome}</Typography>
+                                <Typography>Quantità in arrivo: {selectedDelivery.quantita}</Typography>
                                 <Typography>Data dell'ordine: {selectedDelivery.data.split('T')[0]}</Typography>
                                 <Box>
                                     <Typography>Ubicazione</Typography>
