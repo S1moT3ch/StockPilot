@@ -1,3 +1,4 @@
+//import dipendenze e moduli necessari
 const express = require('express');
 const router = express.Router();
 const deliveryController = require('../controllers/deliveryController');
@@ -9,7 +10,7 @@ router.get('/all', verifyAccessToken, deliveryController.getAllDeliveries);
 //ottenimento di una singola consegna
 router.get('/:deliveryId', verifyAccessToken, deliveryController.getDelivery);
 
-//ingresso di una consegna
+//ingresso (eliminazione) di una consegna
 router.delete('/:deliveryId', verifyAccessToken, deliveryController.deleteDelivery);
 
 module.exports = router;

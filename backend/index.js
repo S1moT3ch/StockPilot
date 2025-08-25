@@ -1,4 +1,5 @@
-require('dotenv').config(); // Carica le variabili d'ambiente dal file .env nella root folder del progetto
+require('dotenv').config(); //carica le variabili d'ambiente dal file .env nella root folder del progetto
+//definizione delle dipendenze necessarie
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -14,13 +15,13 @@ const locationRoutes = require('./routes/locationRoutes');
 const productRouters = require('./routes/productRoutes');
 const categoryRouters = require('./routes/categoryRoutes');
 
-const app = express(); // creazione dell'app con il framework express
-const server = http.createServer(app);
+const app = express(); //creazione dell'app con il framework express
+const server = http.createServer(app); //creazione server http con l'app Express come parametro
 
 //avvio e gestione di socketIO
 const io = socketio(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: '*',
         methods: ['GET', 'POST'],
     }
 });
@@ -63,7 +64,7 @@ const PORT = process.env.PORT || 5000;
 
 //middleware definiti in ordine di esecuzione
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
     credentials: true
 }));
 

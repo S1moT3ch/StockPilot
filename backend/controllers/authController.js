@@ -8,14 +8,14 @@ const generateTokens = (userId) => {
     const accessToken = jwt.sign(
         { userId: userId },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: '25m' } // Access token a breve scadenza
     );
     const refreshToken = jwt.sign(
         { userId: userId},
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: '7d' }
     );
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken }; // Refresh token a lunga scadenza
 };
 
 // Registrazione Utente
@@ -23,6 +23,7 @@ exports.registerUser = async (req,res) => {
     try {
         const { username, nome, cognome, dataNascita, dataAssunzione, cellulare, email, password } = req.body;
 
+        // Controlla se l'utente o l'email esistono già
         const existingUserByUsername = await User.findOne({ username });
         if (existingUserByUsername) {
             return res.status(400).json({ message: "Username già in uso." });
@@ -33,12 +34,13 @@ exports.registerUser = async (req,res) => {
         }
 
         const newUser = new User({ username, nome, cognome, dataNascita, dataAssunzione, cellulare, email, password });
-        await newUser.save();
+        await newUser.save(); // La password viene hashata dal middleware pre-save in userModel
 
         res.status(201).json({ message:"Utente registrato con successo!", userId: newUser._id })
     } catch (error) {
         console.error("Errore registrazione", error);
-        if (error.name = 'ValidationError') {
+        // Gestione degli errori di validazione di Mongoose
+        if (error.name === 'ValidationError') {
            const messages = Object.values(error.errors).map(val => val.message);
            return res.status(400).json({ messages: message.join('. ') });
         }
@@ -54,6 +56,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: "Email e password sono obbligatori" });
         }
 
+        //ricerca utente per email
         const user = await User.findOne({ email })
         if (!user) {
             return res.status(401).json({ message: "Credenziali non valide." });
@@ -64,22 +67,24 @@ exports.loginUser = async (req, res) => {
             return res.status(401).json({ message: "Credenziali non valide" });
         }
 
+        //se le credenziali sono valide, vengono creati i token
         const { accessToken, refreshToken } = generateTokens(user._id);
         console.log(`[LOGIN] Salvataggio refresh token nel DB: ${refreshToken} per utente ${user._id}`); //log per debug
         await RefreshToken.create({ token: refreshToken, userId: user._id});
 
         // Si imposta il refresh token in un cookie HTTPOnly
         res.cookie('jwt', refreshToken, {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite:'Strict',
-            maxAge: 7*24*60*60*1000
+            maxAge: 7*24*60*60*1000 //scadenza 7 giorni (come il token)
         })
 
+        // Invia l'access token nel corpo della risposta
         res.json({
             message: "Login effettuato con successo!",
             accessToken,
-            user: {
+            user: { // Invio di alcune info utenti non sensibili
                 id: user._id,
                 username: user.username,
                 email: user.email
@@ -110,20 +115,23 @@ exports.refreshToken = async (req,res) => {
     console.log(`[REFRESH] Token ${refreshTokenFromCookie} TROVATO nel DB. Procedo con la verifica JWT.`);
 
     try {
+        // Cerca il refresh token nel DB
         const foundToken = await RefreshToken.findOne({ token: refreshTokenTokenFromCookie});
         if (!foundToken) {
             return res.status(403).json({ message: "Proibito: Refresh token non valido o scaduto." });
         }
 
+        // Verifica il refresh token
         jwt.verify(refreshTokenTokenFromCookie, process.env.REFRESH_TOKEN_SECRET, async (err, decoded ) => {
             if(err || foundToken.userId.toString !== decoded.userId) {
                 return res.status(403).json({ message: "Proibito: Refresh token non valido o scaduto." });
             }
 
+            // Il refresh token è valido, genera un nuovo access token
             const newAccessToken = jwt.sign(
                 { userId: decoded.userId },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15m' }
+                { expiresIn: '25m' }
             );
 
             res.json({ accessToken: newAccessToken });
@@ -137,6 +145,7 @@ exports.refreshToken = async (req,res) => {
 // Logout Utente
 exports.logoutUser = async (req,res) => {
     const cookies = req.cookies;
+    //se il cookie non esiste, restituisce stato 204
     if (!cookies?.jwt) {
         return res.sendStatus(204);
     }
@@ -169,6 +178,7 @@ exports.logoutUser = async (req,res) => {
     }
 };
 
+// Funzione per trovare l'utente attualmente loggato
 exports.whoAmI = async (req,res) => {
     try{
         const user = await User.findById(req.userId)
@@ -179,6 +189,7 @@ exports.whoAmI = async (req,res) => {
     }
 }
 
+// Funzione per modificare alcuni dati utente
 exports.edit = async (req,res) => {
     const { email, cellulare } = req.body;
 
@@ -204,6 +215,7 @@ exports.edit = async (req,res) => {
             }
         )
 
+        // Invia i valori aggiornati nel corpo della risposta
         res.json({
             username: updatedUser.username,
             nome: updatedUser.nome,

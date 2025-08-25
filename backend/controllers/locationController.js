@@ -1,7 +1,7 @@
 // import dello schema locazione
 const Location = require('../models/locationModel');
-const {populate} = require("dotenv");
 
+//recupero di tutte le locazioni
 exports.getAllLocations = async (req, res) => {
     try{
         const locations = await Location.find()

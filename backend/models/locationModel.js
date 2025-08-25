@@ -1,8 +1,9 @@
+//import della libreria mongoose
 const mongoose = require('mongoose');
 
 //schemaType per le ubicazioni
 const locationSchema = new mongoose.Schema({
-    corridio: {
+    corridoio: {
         type: String,
         required: [true, 'Il corridio è obbligatorio'],
         unique:true,

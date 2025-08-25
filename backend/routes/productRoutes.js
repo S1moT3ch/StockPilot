@@ -1,3 +1,4 @@
+//import dipendenze e moduli necessari
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
@@ -9,7 +10,7 @@ router.get('/all', verifyAccessToken, productController.getAllProducts);
 //ottenimento di un singolo prodotto
 router.get('/:productId', verifyAccessToken, productController.getProduct);
 
-//cancellazione di un prodotto
+//eliminazione di un prodotto
 router.delete('/:productId', verifyAccessToken, productController.deleteProduct);
 
 //creazione di un prodotto

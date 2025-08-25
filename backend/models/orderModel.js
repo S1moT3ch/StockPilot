@@ -1,3 +1,4 @@
+//import della libreria mongoose
 const mongoose = require('mongoose');
 
 //schemaType per gli ordini

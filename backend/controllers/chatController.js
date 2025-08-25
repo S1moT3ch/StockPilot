@@ -1,5 +1,7 @@
+// import dello schema utente
 const User = require('../models/userModel');
 
+//recupero di tutti gli utenti
 exports.chat = async (req,res) => {
     try{
         const users = await User.find()

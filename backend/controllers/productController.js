@@ -1,10 +1,11 @@
-// import dello schema prodotto
+// import dello schema prodotto e di quelli annidati categoria, locazione e vettore
 const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
 const Location = require('../models/locationModel');
 const Vector = require('../models/vectorModel');
 const {populate} = require("dotenv");
 
+//recupero di tutti i prodotti
 exports.getAllProducts = async (req, res) => {
     try{
         const products = await Product.find()
@@ -18,6 +19,7 @@ exports.getAllProducts = async (req, res) => {
     }
 };
 
+//recupero di uno specifico prodotto
 exports.getProduct = async (req, res) => {
     const { productId } = req.params;
     try{
@@ -35,6 +37,7 @@ exports.getProduct = async (req, res) => {
     }
 };
 
+//eliminazione di un prodotto
 exports.deleteProduct = async (req, res) => {
     const { productId } = req.params;
     try{
@@ -49,6 +52,7 @@ exports.deleteProduct = async (req, res) => {
     }
 }
 
+//aggiunta di un prodotto
 exports.addProduct = async (req,res) => {
     const { id } = req.params;
     const { nome, descrizione, categoria, quantità, ubicazione, dataIngresso, vettore, inMagazzino, segnalazione } = req.body;
@@ -65,7 +69,9 @@ exports.addProduct = async (req,res) => {
             segnalazione
         });
 
+        //si trova il nuovo prodotto inserito e si espande il campo categoria
         const populatedProduct = await Product.findById(newProduct._id).populate('categoria');
+        //viene restituito il nuovo prodotto
         res.status(201).json({ populatedProduct });
     } catch (error) {
         console.error(error);
@@ -73,6 +79,7 @@ exports.addProduct = async (req,res) => {
     }
 }
 
+//aggiornamento della locazione di un determinato prodotto
 exports.updateProductLocation = async (req,res) => {
     const { productId } = req.params;
     const { locationId } = req.body;
@@ -90,12 +97,13 @@ exports.updateProductLocation = async (req,res) => {
     }
 }
 
+//aggiornamento quantità di un certo prodotto, quando ne viene fatto un ordine
 exports.updateOrderProductAmount = async (req,res) => {
     const { productId } = req.params;
     const { quantita } = req.body;
     try {
         const product = await Product.findByIdAndUpdate(productId, {
-            $inc: {quantità: -quantita},
+            $inc: {quantità: -quantita}, //si riduce la quantità del valore ordinato
             inMagazzino: true
         }, {new: true});
         return res.status(200).json(product);
@@ -107,12 +115,13 @@ exports.updateOrderProductAmount = async (req,res) => {
     }
 }
 
+//aggiornamento quantità di un certo prodotto, quando esso giunge tramite una consegna
 exports.updateDeliveryProductAmount = async (req,res) => {
     const { productId } = req.params;
     const { quantita } = req.body;
     try {
         const product = await Product.findByIdAndUpdate(productId, {
-            $inc: {quantità: quantita},
+            $inc: {quantità: quantita}, //si aumenta la quantità del valore giunto
             inMagazzino: true
         }, {new: true});
         return res.status(200).json(product);
@@ -124,6 +133,7 @@ exports.updateDeliveryProductAmount = async (req,res) => {
     }
 }
 
+//aggiunta segnalazione ad un prodotto
 exports.addWarning = async (req,res) => {
     const {productId, segnalazione} = req.body;
 

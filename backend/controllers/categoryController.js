@@ -1,7 +1,7 @@
 // import dello schema categoria
 const Category = require('../models/categoryModel');
 
-
+// recupero di tutte le categorie prodotti
 exports.getAllCategories = async (req, res) => {
     try{
         const categories = await Category.find()

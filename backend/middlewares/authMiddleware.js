@@ -1,3 +1,4 @@
+//import delle librerie e modelli necessari
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
@@ -9,7 +10,7 @@ const verifyAccessToken = (req, res, next) => {
         return res.status(401).json({ message: 'Non autorizzato: Token mancante o malformato' });
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1]; //prende il token dopo "Bearer "
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
@@ -17,6 +18,7 @@ const verifyAccessToken = (req, res, next) => {
             return res.status(403).json({ message: 'Proibito: Token non valido o scaduto' });
         }
 
+        //il token è valido, aggiungi l'ID dell'utente
         req.userId = decoded.userId
         next();
     });

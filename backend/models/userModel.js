@@ -1,3 +1,4 @@
+//import delle librerie mongoose e bcrypt
 const mongoose = require ('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -48,10 +49,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "La password è obbligatoria"],
         minlength: [6, "La password deve essere di almeno 6 caratteri"],
     },
-    profilePicture: {
-        type: String, // URL dell'immagine del profilo
-        default: 'url_placeholder_immagine_profilo_default.jpg',
-    },
+
     createdAt: {
         type: Date,
         default: Date.now,
@@ -60,6 +58,7 @@ const userSchema = new mongoose.Schema({
 
 // Middleware pre-save per hashare la password prima di salvarla
 userSchema.pre('save', async function (next) {
+    // Esegui l'hashing solo se la password è stata modificata (o è nuova)
     if (!this.isModified('password')) {
         return next();
     }

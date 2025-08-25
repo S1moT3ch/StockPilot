@@ -1,6 +1,7 @@
+//import della libreria mongoose
 const mongoose = require ('mongoose');
 
-//schemaType per i prodotto
+//schemaType per il prodotto
 
 const productSchema = new mongoose.Schema({
     nome: {

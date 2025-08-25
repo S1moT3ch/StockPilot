@@ -1,12 +1,15 @@
-// import dello schema consegne
+// import dello schema consegne e di quelli annidati vettore, prodotto e locazione
 const Delivery = require('../models/deliveryModel');
 const Vector = require('../models/vectorModel');
 const Product = require('../models/productModel');
+const Location = require('../models/locationModel');
 const {populate} = require("dotenv");
 
+//recupero di tutte le consegne
 exports.getAllDeliveries = async (req, res) => {
     try{
         const deliveries = await Delivery.find()
+            //vengono popolati i campi che si riferiscono ad altri modelli
             .populate('vettore')
             .populate({
                 path: 'prodotto',
@@ -22,6 +25,7 @@ exports.getAllDeliveries = async (req, res) => {
     }
 };
 
+//recupero di una specifica consegna
 exports.getDelivery = async (req, res) => {
     const { deliveryId } = req.params;
     try{
@@ -44,6 +48,7 @@ exports.getDelivery = async (req, res) => {
     }
 };
 
+//eliminazione di una consegna
 exports.deleteDelivery = async (req, res) => {
     const { deliveryId } = req.params;
     try{

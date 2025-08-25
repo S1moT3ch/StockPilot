@@ -1,3 +1,4 @@
+//import dipendenze e moduli necessari
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
@@ -25,7 +26,7 @@ router.put('/editMe', verifyAccessToken, authController.edit)
 router.get('/all', verifyAccessToken, chatController.chat)
 
 //refresh del token
-router.post('refreshToken', authController.refreshToken);
+router.post('/refreshToken', authController.refreshToken);
 
 //logout utente
 router.post('/logout', authController.logoutUser);

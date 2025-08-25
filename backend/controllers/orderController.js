@@ -1,4 +1,4 @@
-// import dello schema ordine
+// import dello schema ordine e di quelli annidati cliente, prodotto, categoria e locazione
 const Order = require('../models/orderModel');
 const Customer = require('../models/customerModel');
 const Product = require('../models/productModel');
@@ -6,6 +6,7 @@ const Category = require('../models/categoryModel');
 const Location = require('../models/locationModel');
 const {populate} = require("dotenv");
 
+//recupero di tutti gli ordini
 exports.getAllOrders = async (req, res) => {
     try{
         const orders = await Order.find()
@@ -18,6 +19,7 @@ exports.getAllOrders = async (req, res) => {
     }
 };
 
+//recupero di uno specifico ordine
 exports.getOrder = async (req, res) => {
     const { orderId } = req.params;
     try{
@@ -40,6 +42,7 @@ exports.getOrder = async (req, res) => {
     }
 };
 
+//eliminazione di un ordine
 exports.deleteOrder = async (req, res) => {
     const { orderId } = req.params;
     console.log(orderId);

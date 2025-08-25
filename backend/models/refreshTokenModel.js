@@ -1,6 +1,7 @@
+//import della libreria mongoose
 const mongoose = require('mongoose');
 
-//schemaType per i Token
+//schemaType per i refreshToken
 const refreshTokenSchema =  new mongoose.Schema({
     token: {
         type: String,
