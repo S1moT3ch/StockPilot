@@ -1,20 +1,23 @@
+//import dei componenti necessari
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Paper, Typography, Box, List, ListItem, ListItemText, Link } from '@mui/material';
+import { Paper, Typography, List, ListItem, ListItemText, Link } from '@mui/material';
+import {NEWS_API_KEY} from "../config/config";
 
 const News = () => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const API_KEY = "a5c4d5c859c94fa291df55b748ec02f7"
+
 
 
     useEffect(() => {
+        //chiamata http con Axios ad un'API di NewsAPI per recuperare alcune notizie di attualità
         const fetchNews = async () => {
             try {
                 const res = await axios.get(
-                    `https://newsapi.org/v2/everything?q=italia&sortBy=publishedAt&apiKey=${API_KEY}`
+                    `https://newsapi.org/v2/everything?q=italia&sortBy=publishedAt&apiKey=${NEWS_API_KEY}`
                 );
                 setNews(res.data.articles);
             } catch (err) {
@@ -30,12 +33,14 @@ const News = () => {
     if (loading) return <Typography>Caricamento news...</Typography>;
     if (error) return <Typography color="error">{error}</Typography>;
 
+    //componente news con le relative informazioni
     return (
         <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
                 News Italia
             </Typography>
             <List>
+                {/* seleziona solo le prime tre notizie */}
                 {news.slice(0, 3).map((article, index) => (
                     <ListItem key={index}>
                         <ListItemText

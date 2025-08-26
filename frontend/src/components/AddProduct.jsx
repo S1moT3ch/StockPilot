@@ -1,3 +1,4 @@
+//import dei componenti e degli hook necessari
 import React, {useState, useEffect} from "react";
 
 import {
@@ -8,7 +9,9 @@ import {
     Select,
 } from '@mui/material';
 import axios from "axios";
+import {BACKEND_URL} from "../config/config";
 
+//componente per aggiugere i prodotti, che riceve delle props dal suo componente genitore
 const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, setFilteredProducts}) => {
 
     const [locations, setLocations] = useState([]);
@@ -21,11 +24,13 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
 
     useEffect(() => {
 
+        //richiesta http con Axios per ottenere i dati delle ubicazioni dal backend
         const fetchLocations = async () => {
+            //recupero e uso del token nella richiesta per una maggior sicurezza sull'operazione
             const token = localStorage.getItem('accessToken');
 
             try {
-                const res = await axios.get('http://localhost:5000/api/locations/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/locations/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -41,10 +46,12 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
 
     }, []);
 
+    //funzione per modificare l'ubicazione del prodotto
     const handleAdd = async () => {
+        //recupero e uso del token nella richiesta per una maggior sicurezza sull'operazione
         const token = localStorage.getItem('accessToken');
         try {
-            const res = await axios.post(`http://localhost:5000/api/products/new`,
+            const res = await axios.post(`${BACKEND_URL}/api/products/new`,
                 {nome, descrizione, quantità, ubicazione, categoria, segnalazione},
                 {
                     headers: {
@@ -56,6 +63,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
 
             const prodotto = res.data.populatedProduct;
 
+            //set degli array per gestire eventualmente la ricerca filtrata di prodotti
             setProduct(prev => [...prev, {
                 _id: prodotto._id,
                 nome: prodotto.nome,
@@ -80,6 +88,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
         }
     }
 
+    // box per aggiungere un prodotto con i relativi campi
     return (
         <Box>
             <TextField
@@ -112,6 +121,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
                 label="Categoria"
                 onChange={(e) => setCategoria(e.target.value)}
             >
+                {/* visualizza un menù a tendina per visualizzare le categorie disponibili */}
                 <MenuItem value="">Tutte</MenuItem>
                 {categories.map((cat, index) => (
                     <MenuItem
@@ -129,6 +139,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
                 label="Aggiungi Ubicazione"
                 onChange = {(e) => setUbicazione(e.target.value)}
             >
+                {/* visualizza un menù a tendina per visualizzare le ubicazioni disponibili */}
                 {locations.map((location) => (
                     <MenuItem key={location._id} value={location._id}>
                         Corridoio&nbsp;<strong>{location.corridoio}</strong>,

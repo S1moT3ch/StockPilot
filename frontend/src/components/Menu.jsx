@@ -1,10 +1,10 @@
+//import dei componenti necessari
+
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {
     Box,
     Typography,
-    Grid,
-    Button,
     IconButton,
     Drawer,
     List,
@@ -13,6 +13,8 @@ import {
     ListItemText,
     Divider, ListItemIcon
 } from '@mui/material';
+
+//import delle icone
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -21,6 +23,8 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import ChatIcon from '@mui/icons-material/Chat';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
+
+import {BACKEND_URL} from "../config/config";
 import axios from "axios";
 
 const Menu = () => {
@@ -31,10 +35,11 @@ const Menu = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare le info dell'utente attualmente loggato
         const fetchUser = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const res = await axios.get(`${BACKEND_URL}/api/auth/me`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization:  `Bearer ${token}`,
@@ -52,22 +57,25 @@ const Menu = () => {
         fetchUser();
     }, []);
 
+    //funzione che gestisce il logout
     const handleLogout = async () => {
         try {
-            localStorage.removeItem('accessToken');
             await axios.post('http://localhost:5000/api/auth/logout', {}, {
                 withCredentials: true,
             });
-            navigate('/login');
+            localStorage.removeItem('accessToken'); //rimozione dell' accessToken da localStorage
+            navigate('/login'); //redirect a login
         } catch (error) {
             console.error("Errore durante il logout: ", error);
         }
     }
 
+    //funzione gestore apertura menu laterale
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
     };
 
+    //definizione link per i vari nomi dei pulsanti
     const menuItems = [
         { label: 'Dashboard', path: '/user'},
         { label: 'Area Riservata', path: '/profile' },
@@ -87,11 +95,13 @@ const Menu = () => {
         logout : <LogoutIcon sx={{ color: 'red'}} />
     }
 
+    //funzione gestore tasti del menu
     const handleMenuClick = (item) => {
         setDrawerOpen(false);
         if (item.path) navigate(item.path);
     }
 
+    //componente menu laterale
     return (
         <Box sx={{ p: 3}}>
             <IconButton color="inherit" onClick={() => toggleDrawer(true)}>

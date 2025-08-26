@@ -1,15 +1,14 @@
+//import dei componenti necessari
 import React, { useEffect, useState } from 'react';
 import {
-    AppBar,
-    Toolbar,
     Box,
     Button,
     Typography,
     Grid,
-    Paper,
     CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
 import {useNavigate} from "react-router-dom";
 
 import Meteo from './Meteo';
@@ -23,11 +22,12 @@ const User = () => {
 
     const navigate = useNavigate();
 
+    //chiamata http con Axios con autenticazione per recuperare le info dell'utente attualmente loggato
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const res = await axios.get(`${BACKEND_URL}/api/auth/me`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization:  `Bearer ${token}`,
@@ -45,18 +45,20 @@ const User = () => {
         fetchUser();
     }, []);
 
+    //chiamata http con Axios per effettuare il logout utente
     const handleLogout = async () => {
         try {
-            localStorage.removeItem('accessToken');
-            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+            await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, {
                 withCredentials: true,
             });
-            navigate('/login');
+            localStorage.removeItem('accessToken'); //rimozione dell' accessToken da localStorage
+            navigate('/login'); //redirect a login
         } catch (error) {
             console.error("Errore durante il logout: ", error);
         }
     }
 
+    //se il componente è ancora in fase di caricamento, mostra il cerchio che ruota
     if (loading) {
         return (
             <Box display="flex" justifyContent="center">
@@ -65,16 +67,25 @@ const User = () => {
         );
     }
 
+    //se il componente è stato caricato in tutte le sue parti, renderizza la dashboard
     return (
         <Box>
             <Bar />
             <Box sx={{ p: 3 }}>
                 <Typography variant="h4" gutterBottom sx={{ m: 3}}>
+                    {/* mostra nome dell'utente attualmente loggato */}
                     Benvenuto{user?.nome ?`, ${user.nome}` : ''}!
                 </Typography>
 
+                {/* mostra i componenti Grid interni con layout display: flex*/}
                 <Grid container spacing={2} mt={2} sx={{display: "flex", justifyContent: "space-evenly"}}>
 
+                    {/*
+                        componenti Meteo e News mostrati in colonna.
+                        Essi occuperanno tutto lo spazio disponibile
+                        in larghezza per schermi piccoli,
+                        altrimenti occuperanno 9 colonne delle 12 disponibili
+                    */}
                     <Grid item xs={12} md={9} xl={9} container direction="column" spacing={2} sx={{ width: "60vw" }}>
                         <Grid item>
                             <Meteo />
@@ -85,10 +96,16 @@ const User = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={3} xl={9} sx={{ display: 'flex', flexDirection: 'column' , gap:2}}>
+                    {/*
+                        bottoni di navigazione mostrati in colonna.
+                        Essi occuperanno tutto lo spazio disponibile
+                        in larghezza per schermi piccoli,
+                        altrimenti occuperanno 3 colonne delle 12 disponibili
+                    */}
+                    <Grid item xs={12} sm={3} xl={3} sx={{ display: 'flex', flexDirection: 'column' , gap:2}}>
                         <Button
                             variant="contained"
-                            onClick={() => navigate('/profile')}
+                            onClick={() => navigate('/profile')} // al click del pulsante naviga alla pagina profilo utente
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
                         >
@@ -97,7 +114,7 @@ const User = () => {
 
                         <Button
                             variant="contained"
-                            onClick={() => navigate('/orders')}
+                            onClick={() => navigate('/orders')} // al click del pulsante naviga alla pagina degli ordini
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
                         >
@@ -106,7 +123,7 @@ const User = () => {
 
                         <Button
                             variant="contained"
-                            onClick={() => navigate('/deliveries')}
+                            onClick={() => navigate('/deliveries')} // al click del pulsante naviga alla pagina delle consegne
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
                         >
@@ -115,7 +132,7 @@ const User = () => {
 
                         <Button
                             variant="contained"
-                            onClick={() => navigate('/catalogue')}
+                            onClick={() => navigate('/catalogue')} // al click del pulsante naviga alla pagina del catalogo prodotti
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
                         >
@@ -124,7 +141,7 @@ const User = () => {
 
                         <Button
                             variant="contained"
-                            onClick={() => navigate('/chat')}
+                            onClick={() => navigate('/chat')} // al click del pulsante naviga alla pagina della chat
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5 }}
                         >
@@ -133,7 +150,7 @@ const User = () => {
 
                         <Button
                             variant="contained"
-                            onClick={handleLogout}
+                            onClick={handleLogout} // al click del pulsante effettua il logout
                             size="large"
                             sx={{ fontSize: "1.2rem", paddingY: 1.5, backgroundColor:"red" }}
                         >

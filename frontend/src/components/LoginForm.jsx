@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, {useState} from 'react';
 import {
     Box,
@@ -13,6 +14,8 @@ import {
     Visibility,
     VisibilityOff
 } from "@mui/icons-material";
+import {BACKEND_URL} from "../config/config";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/LoginForm.css';
 
@@ -28,21 +31,23 @@ const LoginForm = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
 
+    //chiamata http con Axios per inviare al backend i dati del login
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMsg('');
         setSuccessMsg('');
 
-
         try {
             const res = await axios.post(
-                `http://localhost:5000/api/auth/login`,
+                `${BACKEND_URL}/api/auth/login`,
                 { email, password },
                 { withCredentials: true }
             );
 
+            //salvataggio accessToken in localStorage per future chiamate http con autentcazione stateless
             localStorage.setItem('accessToken', res.data.accessToken)
             setSuccessMsg('Login effettuato!');
+            //se il login va a buon fine, naviga alla dashboard
             navigate('/user');
         } catch (err) {
             const message = err.response?.data?.message;
@@ -50,14 +55,17 @@ const LoginForm = () => {
         }
     };
 
+    //funzione per mostrare la password
     const handleShowPassword = () => {
         setShowPassword((prev) => !prev);
     };
 
+    //funzione per prevenire eventi di default
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     }
 
+    //Componente per effettuare il login
     return (
         <Box className="container mt-5">
             <Paper className="login-form-container p-4 shadow rounded">
@@ -95,6 +103,7 @@ const LoginForm = () => {
                         }}
                     />
 
+                    {/* visualizzazione messaggi di errore */}
                     {errorMsg && (
                         <Alert severity="error">
                             {errorMsg}
@@ -110,7 +119,7 @@ const LoginForm = () => {
                     <Button
                         type="submit"
                         variant="contained"
-                        className="btn btn-primary login-button"
+                        className="login-button"
                     >
                         Login
                     </Button>

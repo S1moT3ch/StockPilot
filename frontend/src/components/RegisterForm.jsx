@@ -1,5 +1,5 @@
+//import dei component necessari
 import React, {useState} from 'react';
-
 import {
     Box,
     TextField,
@@ -16,10 +16,10 @@ import {
     Visibility,
     VisibilityOff
 } from "@mui/icons-material";
+import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/RegisterForm.css';
-
-import axios from 'axios';
 
 const RegisterForm = ({setIsLogin}) => {
 
@@ -35,13 +35,14 @@ const RegisterForm = ({setIsLogin}) => {
     const [successMsg, setSuccessMsg] = useState('');
 
     const handleSubmit = async (e) => {
+        //chiamata http con Axios per inviare al backend i dati del form di registrazione
         e.preventDefault();
         setErrorMsg('');
         setSuccessMsg('');
 
         try{
             const res = await axios.post(
-                'http://localhost:5000/api/auth/register',
+                `${BACKEND_URL}/api/auth/register`,
                 { username, nome, cognome, dataNascita, cellulare, email, password },
                 {withCredentials: true}
             )
@@ -53,14 +54,17 @@ const RegisterForm = ({setIsLogin}) => {
         }
     };
 
+    //funzione per mostrare la password
     const handleShowPassword = () => {
         setShowPassword((prev) => !prev);
     };
 
+    //funzione per prevenire comportamenti di default
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     }
 
+    //componente registrazione utente
     return (
         <Box>
             <Paper className="register-form-container p-4 shadow rounded">
@@ -148,6 +152,7 @@ const RegisterForm = ({setIsLogin}) => {
                         }}
                     />
 
+                    //visualizza i messaggi d'errore
                     {errorMsg && (
                         <Alert severity="error">
                             {errorMsg}

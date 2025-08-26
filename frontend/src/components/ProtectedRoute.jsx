@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import { useEffect, useState} from 'react';
 import {Navigate, Outlet } from 'react-router-dom';
 import {checkAuth} from '../services/authService';
@@ -7,6 +8,7 @@ function ProtectedRoute() {
     const [isAuth, setIsAuth] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    //uso middleware lato client per verificare l'autenticazione
     useEffect(() => {
         const verify = async() => {
             const result = await checkAuth();
@@ -17,9 +19,12 @@ function ProtectedRoute() {
         verify();
     }, []);
 
+    //se la funzione non è ancora terminata, renderizza "Caricamento..."
     if (loading) return <p>Caricamento</p>;
+    //se la funzione restituisce false, ritorna al login
     if (!isAuth) return <Navigate to ='/login' replace />
 
+    //renderizza i vari componenti figli definiti in React Router
     return <Outlet />;
 }
 

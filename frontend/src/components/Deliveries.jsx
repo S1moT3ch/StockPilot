@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, { useEffect, useState } from 'react';
 import {
     Box,
@@ -7,13 +8,11 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select, Toolbar, AppBar
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
+
 import Options from "./Options";
 import Bar from "./Bar";
 
@@ -24,10 +23,11 @@ const Deliveries = () => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutte le consegne
         const fetchDeliveries = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/deliveries/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/deliveries/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -42,12 +42,13 @@ const Deliveries = () => {
         fetchDeliveries();
     }, [])
 
+    //chiamata http con Axios con autenticazione per recuperare tutti i dettagli della consegna selezionata
     const handleViewDetails = async (deliveryId) => {
         setLoading(true);
         setOpen(true);
         const token = localStorage.getItem('accessToken');
         try {
-            const res = await axios.get(`http://localhost:5000/api/deliveries/${deliveryId}`, {
+            const res = await axios.get(`${BACKEND_URL}/api/deliveries/${deliveryId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -61,17 +62,19 @@ const Deliveries = () => {
         }
     };
 
+    //funzione gestore chiusura dialog
     const handleClose = () => {
         setOpen(false);
         setSelectedDelivery(null)
     };
 
-
+    //chiamata http con Axios con autenticazione per registare la consegna selezionata
+    //e aggiornare la relativa quantità in magazzino
     const handleDelete = async (deliveryId) => {
         const token = localStorage.getItem('accessToken')
         const delivery = deliveries.find(d => d._id === deliveryId);
         try {
-            await axios.delete(`http://localhost:5000/api/deliveries/${deliveryId}`, {
+            await axios.delete(`${BACKEND_URL}/api/deliveries/${deliveryId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -92,6 +95,7 @@ const Deliveries = () => {
         }
     }
 
+    //componente per gestire la registrazione delle consegne
     return (
         <Box>
             <Bar />
@@ -116,6 +120,7 @@ const Deliveries = () => {
                     </Paper>
                 ))}
 
+                {/* dialog per visualizzare i dettagli della consegna selezionata */}
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                     <DialogTitle>Dettagli Consegna</DialogTitle>
                     <DialogContent>

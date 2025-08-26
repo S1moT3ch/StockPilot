@@ -1,7 +1,7 @@
+//import componenti necessari
 import React from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
-//import componenti
 import Login from './components/Login';
 import NotFound from './components/NotFound.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -19,10 +19,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFound />} />
+          {/* rotte protette col middleware checkAuth*/}
         <Route element={<ProtectedRoute />}>
             <Route path="/user" element={<User />} />
+            <Route path="/profile" element={<UserProfile />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/catalogue" element={<Catalogue />} />

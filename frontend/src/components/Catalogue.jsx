@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, { useEffect, useState } from 'react';
 import {
     Box,
@@ -15,6 +16,7 @@ import {
     Select, Toolbar, AppBar,
 } from '@mui/material';
 import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
 
 import AddProduct from './AddProduct';
 import Bar from "./Bar";
@@ -34,10 +36,11 @@ const Catalogue = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutti prodotti
         const fetchProducts = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/products/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/products/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -50,10 +53,11 @@ const Catalogue = () => {
             }
         };
 
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutte le categorie
         const fetchCategories = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/categories/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/categories/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -70,6 +74,8 @@ const Catalogue = () => {
     }, [])
 
     useEffect(() => {
+
+        //gestione ricerca prodotti filtrati
         let filtered = [...products];
 
         if (searchTerm.trim()){
@@ -87,12 +93,13 @@ const Catalogue = () => {
         setFilteredProducts(filtered);
     }, [searchTerm, selectedCategory,products]);
 
+    //chiamata http con Axios con autenticazione per recuperare tutti i dettagli del prodotto selezionato
     const handleViewDetails = async (productId) => {
         setLoading(true);
         setOpen(true);
         const token = localStorage.getItem('accessToken');
         try {
-            const res = await axios.get(`http://localhost:5000/api/products/${productId}`, {
+            const res = await axios.get(`${BACKEND_URL}/api/products/${productId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -106,23 +113,28 @@ const Catalogue = () => {
         }
     };
 
+    //funzione gestore apertura dialog aggiunta prodotto
     const handleViewAdd = () => {
         setOpenAdd(true);
     };
 
+    //funzione gestore chiusura dialog aggiunta prodotto
+    const handleCloseAdd = () => {
+        setOpenAdd(false);
+    };
+
+    //funzione gestore chiusura dialog visualizza dettagli
     const handleClose = () => {
         setOpen(false);
         setSelectedProduct(null)
     };
 
-    const handleCloseAdd = () => {
-        setOpenAdd(false);
-    };
-
+    //funzione gestore cambiamento valore campo segnalazione
     const handleSegnalazioneChange = (event) => {
         setNewSegnalazione(event.target.value);
     };
 
+    //chiamata http con Axios con autenticazione per aggiungere una segnalazione per un prodotto
     const handleAddSegnalazione = async () => {
         const token = localStorage.getItem('accessToken');
         if (!newSegnalazione.trim()) {
@@ -132,7 +144,7 @@ const Catalogue = () => {
 
         setIsSubmitting(true);
         try {
-            await axios.post(`http://localhost:5000/api/products/segnalazione`, {
+            await axios.post(`${BACKEND_URL}/api/products/segnalazione`, {
                 productId: selectedProduct._id,
                 segnalazione: newSegnalazione
             }, {
@@ -153,11 +165,11 @@ const Catalogue = () => {
         }
     };
 
-
+    //chiamata http con Axios con autenticazione per cancellare il prodotto selezionato
     const handleDelete = async (productId) => {
         const token = localStorage.getItem('accessToken')
         try {
-            await axios.delete(`http://localhost:5000/api/products/${productId}`, {
+            await axios.delete(`${BACKEND_URL}/api/products/${productId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -166,10 +178,11 @@ const Catalogue = () => {
             setProducts(prevProducts => prevProducts.filter(product => product._id !== productId));
             handleClose();
         } catch (error) {
-            console.log("Errore nell'evasione dell'ordine selezionato", error);
+            console.log("Errore nell'eliminazione del prodotto selezionato", error);
         }
     }
 
+    //componente catalogo prodotti
     return (
         <Box>
             <Bar />
@@ -177,6 +190,8 @@ const Catalogue = () => {
             <Typography variant="h4" gutterBottom>Catalogo Prodotti</Typography>
 
             <Box display="flex" gap={2} mb={4} mt={6}>
+
+                {/* campi per filtrare i prodotti */}
                 <TextField
                     fullWidth
                     label="Cerca prodotto"
@@ -219,6 +234,7 @@ const Catalogue = () => {
                 </Paper>
             ))}
 
+            {/* dialog per visualiizare i dettagli del prodotto selezionato */}
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                 <DialogTitle>Dettagli Prodotto</DialogTitle>
                 <DialogContent>
@@ -252,6 +268,7 @@ const Catalogue = () => {
                                 )}
                             </Box>
 
+                            {/* campi per aggiungere una segnalazione per la consegna selezionata */}
                             {!selectedProduct.segnalazione && (
                                 <Box>
                                     <TextField

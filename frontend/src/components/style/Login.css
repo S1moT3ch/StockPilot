@@ -1,3 +1,5 @@
+/* foglio di stile per la pagina di login */
+/* le regole segnate come "!important" servono ad avere priorità rispetto a quelle applicate con MaterialUI */
 .login-container {
     background-color: #abeece;
     width: 40rem;
@@ -34,6 +36,7 @@
     background-color: #28492e !important;
 }
 
+ /* media query per gestire display più piccoli */
 @media (max-width: 760px) {
     .login-container {
         width: 90%;

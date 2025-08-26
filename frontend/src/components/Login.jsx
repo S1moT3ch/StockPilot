@@ -1,3 +1,5 @@
+//import dei componenti necessari
+
 import React, {useState} from 'react';
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,13 +8,11 @@ import {
     Box,
     Button,
     Typography,
-    Paper,
 } from "@mui/material";
+import {BACKEND_URL} from "../config/config";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/Login.css';
-
-
-//import componenti
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import {checkAuth} from "../services/authService";
@@ -27,6 +27,7 @@ const Login = () => {
 
     useEffect(() => {
 
+        //uso middleware lato-client per verificare l'autenticazione
         const verify = async() => {
             const result = await checkAuth();
             setIsAuth(result);
@@ -36,19 +37,25 @@ const Login = () => {
         verify();
     }, [navigate]);
 
+    //se l'utente è già autenticato, vai direttamente alla pagina utente (dashboard)
     if (isAuth) {
         navigate('/user', {replace: true});
     }
 
+    //funzione per cambiare visuliazzazione tra form login e form registrazione
     const toggleForm = () => {
         setIsLogin(prev => !prev);
     }
+
+    //componente per gestire login o registrazione utente
     return (
         <Box className = "login-container container mt-4 p-4 shadow rounded">
 
             <div className="logo-container">
                 <img src="/StockPilot_icon_full_no_bg.png" alt="Logo StockPilot" className="logo"/>
             </div>
+
+            {/* se login == true, visualizza form login, altrimenti visualizza form registrazione */}
             {isLogin ? (<LoginForm />) : (<RegisterForm setIsLogin={setIsLogin} />)}
             <Typography
                 variant="body1"

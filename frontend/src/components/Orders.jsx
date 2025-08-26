@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, { useEffect, useState } from 'react';
 import {
     Box,
@@ -10,8 +11,9 @@ import {
     CircularProgress
 } from '@mui/material';
 import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
+
 import Bar from "./Bar";
-import Options from "./Options";
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -20,10 +22,11 @@ const Orders = () => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutti gli ordini
         const fetchOrders = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/orders/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/orders/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -38,13 +41,13 @@ const Orders = () => {
         fetchOrders();
     }, [])
 
-
+    //chiamata http con Axios con autenticazione per recuperare tutti i dettagli dell'ordine selezionato
     const handleViewDetails = async (orderId) => {
         setLoading(true);
         setOpen(true);
         const token = localStorage.getItem('accessToken');
         try {
-            const res = await axios.get(`http://localhost:5000/api/orders/${orderId}`, {
+            const res = await axios.get(`${BACKEND_URL}/api/orders/${orderId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -58,25 +61,27 @@ const Orders = () => {
         }
     };
 
+    //funzione gestore chiusura dialog
     const handleClose = () => {
         setOpen(false);
         setSelectedOrder(null)
     };
 
-
+    //chiamata http con Axios con autenticazione per evadere l'ordine selezionato
+    //e aggiornare la relativa quantità in magazzino
     const handleDelete = async (orderId) => {
         const token = localStorage.getItem('accessToken')
         const order = orders.find(o => o._id === orderId);
 
         try {
-            await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+            await axios.delete(`${BACKEND_URL}/api/orders/${orderId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 withCredentials: true,
             });
 
-            await axios.put(`http://localhost:5000/api/products/order/${order.prodotto._id}`, {
+            await axios.put(`${BACKEND_URL}/api/products/order/${order.prodotto._id}`, {
                 quantita: order.quantita,
             },{
                 headers: {
@@ -91,6 +96,7 @@ const Orders = () => {
         }
     }
 
+    //componente per gestire l'evasione degli ordini
     return (
         <Box>
             <Bar />
@@ -113,6 +119,7 @@ const Orders = () => {
                     </Paper>
                 ))}
 
+                {/* dialog per visualizzare i dettagli dell'ordine selezionato */}
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                     <DialogTitle>Dettagli Ordine</DialogTitle>
                     <DialogContent>
@@ -144,6 +151,7 @@ const Orders = () => {
                                         </Box>
                                     </Box>
                                 </Box>
+                                {/* mostra la data dell'ordine senza orario */}
                                 <Typography>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
                                 <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}>
                                     Evadi ordine

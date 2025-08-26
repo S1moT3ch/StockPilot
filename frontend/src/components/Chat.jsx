@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from "axios";
@@ -9,11 +10,13 @@ import {
     Typography,
     TextField,
     Button,
-    Paper, Toolbar, AppBar,
+    Paper
 } from '@mui/material';
+import {BACKEND_URL} from "../config/config";
+
 import Bar from "./Bar";
 
-const socket = io('http://localhost:5000');
+const socket = io(`${BACKEND_URL}`);
 
 
 const Chat = () => {
@@ -26,10 +29,11 @@ const Chat = () => {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutti gli utenti
         const fetchUsers = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/auth/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -42,10 +46,11 @@ const Chat = () => {
             }
         };
 
+        //chiamata http con Axios con autenticazione per recuperare l'utente attualmente loggato
         const fetchCurrentUser = async () => {
             const token = localStorage.getItem('accessToken');
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const res = await axios.get(`${BACKEND_URL}/api/auth/me`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
@@ -66,6 +71,7 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
+        //uso di socket.io per gestire lo scambio di messaggi real time usando event emit
         if (!currentUser?._id) return;
         socket.emit('login', currentUser._id);
 
@@ -79,6 +85,7 @@ const Chat = () => {
                     const sender = users.find(u => u._id === message.from);
                     const senderName = sender ? sender.username : "Sconosciuto";
 
+                    //uso notifcìiche
                     new Notification("Nuovo messaggio", {
                         body: `${senderName}`
                     });
@@ -92,6 +99,7 @@ const Chat = () => {
         };
     }, [users, currentUser]);
 
+    //funzione gestore lo scroll dei messaggi arrivati
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -99,11 +107,13 @@ const Chat = () => {
     }, [messages]);
 
     useEffect(() => {
+        //richiesta permessi per le notifiche
         if ("Notification" in window && Notification.permission !== "granted") {
             Notification.requestPermission();
         }
     }, []);
 
+    //funzione per inviare i messaggi usando event emit
     const handleSend = () => {
         if (selectedUser && text.trim()) {
             socket.emit('sendMessage', {
@@ -119,6 +129,7 @@ const Chat = () => {
         return <Typography>Caricamento...</Typography>;
     }
 
+    //componente per inviare e ricevere messaggi
     return (
         <Box>
             <Bar />
@@ -127,6 +138,7 @@ const Chat = () => {
                     <Typography variant="h6" p={2}>
                         Utenti
                     </Typography>
+                    {/* lista utenti */}
                     <List>
                         {users
                             .filter((u) => u._id !==currentUser._id)
@@ -144,6 +156,7 @@ const Chat = () => {
                     </List>
                 </Paper>
 
+                {/* mostra chat con l'utente desiderato */}
                 <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <Box p={2} borderBottom="1px solid #ccc">
                         <Typography variant="h6">
@@ -171,7 +184,7 @@ const Chat = () => {
                                     sx={{
                                         display: 'flex',
                                         justifyContent:
-                                            msg.from === currentUser.id ? 'flex-end' : 'flex-start',
+                                            msg.from === currentUser._id ? 'flex-end' : 'flex-start',
                                         mb: 1,
                                     }}
                                 >

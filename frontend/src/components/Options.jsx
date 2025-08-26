@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, {useEffect, useState} from 'react';
 import {
     Alert,
@@ -9,6 +10,7 @@ import {
     Select, Typography
 } from '@mui/material';
 import axios from 'axios';
+import {BACKEND_URL} from "../config/config";
 
 const Options = ({productId}) => {
     const [locations, setLocations] = useState([]);
@@ -17,11 +19,12 @@ const Options = ({productId}) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        //chiamata http con Axios con autenticazione per recuperare la lista di tutte le ubicazioni
         const fetchLocations = async () => {
             const token = localStorage.getItem('accessToken');
 
             try{
-                const res = await axios.get('http://localhost:5000/api/locations/all', {
+                const res = await axios.get(`${BACKEND_URL}/api/locations/all`, {
                     headers :{
                         Authorization: `Bearer ${token}`,
                     },
@@ -36,14 +39,16 @@ const Options = ({productId}) => {
         fetchLocations()
     }, [])
 
+    //funzione gestore cambiamenti di valore nel campo ubicazione
     const handleChange = (event) => {
         setSelectedLocation(event.target.value);
     }
 
+    //chiamata http con Axios con autenticazione per aggiornare l'ubicazione di un determinato prodotto
     const handleUpdateProductLocation = async (productId, locationId) => {
         try{
             const token = localStorage.getItem('accessToken');
-            const response = await axios.put(`http://localhost:5000/api/products/location/${productId}`, {locationId}, {
+            const response = await axios.put(`${BACKEND_URL}/api/products/location/${productId}`, {locationId}, {
                 headers :{
                     Authorization: `Bearer ${token}`,
                 },
@@ -57,6 +62,7 @@ const Options = ({productId}) => {
         }
     }
 
+    //componente per scegliere dove riporre un prodotto in magazzino
     return (
         <Box>
             <Typography>Prodotto non in magazzino. Scegli un posto dove riporlo:</Typography>
@@ -68,6 +74,7 @@ const Options = ({productId}) => {
                     label="Ubicazione"
                     onChange={handleChange}
                 >
+                    {/* menu a tendina delle ubicazioni possibili */}
                     {locations.map((location) => (
                         <MenuItem key={location._id} value={location._id}>
                             Corridoio&nbsp;<strong>{location.corridoio}</strong>,
@@ -78,6 +85,7 @@ const Options = ({productId}) => {
                 </Select>
             </FormControl>
 
+            {/* gestisce eventuali errori provenienti dal backend*/}
             {errorMessage && (
                 <Alert severity="error">
                     {errorMessage}

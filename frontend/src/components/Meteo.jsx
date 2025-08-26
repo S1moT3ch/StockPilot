@@ -1,4 +1,7 @@
+//import dei componenti necessari
 import React, { useState, useEffect } from 'react';
+import {METEO_API_KEY} from "../config/config"
+import {CITY} from "../config/config"
 import axios from 'axios';
 import { Box, Typography, Paper } from '@mui/material';
 
@@ -7,14 +10,12 @@ const Meteo = () => {
     const [loading, setLoading] = useState(true);
     const [error,setError] = useState(null);
 
-    const API_KEY = "f46d15f626fe39b6a374c49015244d21";
-    const CITY = "Bari,it";
-
+    //chiamata http con Axios ad un'API di OpenWeatherMap per recuperare i dati meteo
     useEffect(() => {
         const fetchMeteo = async () => {
             try {
                 const res = await axios.get(
-                    `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=${API_KEY}`
+                    `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=${METEO_API_KEY}`
                 );
                 setMeteo(res.data);
             } catch (err) {
@@ -30,8 +31,10 @@ const Meteo = () => {
     if (loading) return <Typography>Caricamento meteo...</Typography>;
     if (error) return <Typography color="error">{error}</Typography>;
 
+    //icona del meteo previsto
     const iconUrl = `https://openweathermap.org/img/wn/${meteo.weather[0].icon}@2x.png`;
 
+    //componente meteo con le relative informazioni
     return (
         <Paper
             sx={{

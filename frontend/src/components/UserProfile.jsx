@@ -1,3 +1,4 @@
+//import dei componenti necessari
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {
@@ -8,8 +9,10 @@ import {
     Alert,
     Paper,
     Typography,
-    Grid, Toolbar, AppBar
+    Grid
 } from '@mui/material';
+import {BACKEND_URL} from "../config/config";
+
 import Bar from "./Bar";
 
 function UserProfile() {
@@ -25,10 +28,11 @@ function UserProfile() {
     const [saveSuccess, setSaveSuccess] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
+        //chiamata http con Axios con autenticazione per recuperare le info dell'utente attualmente loggato
         const fetchUser = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const token = localStorage.getItem('accessToken');
+                const res = await axios.get(`${BACKEND_URL}/api/auth/me`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization:  `Bearer ${token}`,
@@ -37,7 +41,7 @@ function UserProfile() {
                 });
 
                 if (res.status !== 200) {
-                    throw new Error('Errore nel recupro dati');
+                    throw new Error('Errore nel recupero dati');
                 }
 
                 const data = await res.data;
@@ -55,22 +59,24 @@ function UserProfile() {
         fetchUser();
     }, [])
 
+    //funzione gestore click su bottone modifica
     const handleEditClick = () => {
         setEditMode(true);
         setSaveError(null);
         setSaveSuccess(null);
     };
 
+    //funzione per salvare le modifiche effettuaute
     const handleSave = async () => {
         setSaving(true);
         setSaveError(null);
         setSaveSuccess(null);
 
-        const token = localStorage.getItem('accessToken');
-
+        //chiamata http con Axios con autenticazione per aggiornare i dati utente
         try {
+            const token = localStorage.getItem('accessToken');
             const res = await axios.put(
-                'http://localhost:5000/api/auth/editMe',
+                `${BACKEND_URL}/api/auth/editMe`,
                 {email, cellulare},
                 {
                 headers: {
@@ -94,6 +100,7 @@ function UserProfile() {
         }
     }
 
+    //funzione per calcolare l'anzianità di servizio di un dipendente
     const calcolaAnzianita = (dataAssunzione) => {
         const assunzione = new Date(dataAssunzione);
         const oggi = new Date();
@@ -116,10 +123,14 @@ function UserProfile() {
         return `${anni} anni, ${mesi} mesi e ${giorni} giorni`;
     }
 
+    //se i dati sono in caricamento, attendi
     if (loading) return <p>Caricamento dati...</p>;
+    //se si è verificato un errore, renderizza l'errore
     if (error) return <p>Errore: {error}</p>;
+    // se non è stao recuperato alcun utente, mostra che non è possibile mostrare alcun dato
     if (!user) return <p>Nessun dato utente disponibile</p>;
 
+    //componente profilo Utente
     return (
         <Box>
             <Bar />
@@ -130,6 +141,7 @@ function UserProfile() {
                         Profilo Utente
                     </Typography>
 
+                    {/* layout responsivo per device con schermi più piccoli*/}
                     <Grid container spacing={2} sx={{ mb: 2, display: "flex", flexDirection: "column" }}>
                         <Grid item xs={12} sm={6}>
                             <Typography><strong>Username:</strong> {user.username}</Typography>
@@ -152,12 +164,14 @@ function UserProfile() {
                     </Grid>
 
                     <Grid container spacing={2} sx={{ mb: 2 }}>
+                        {/* se si è in modalità modifica, mostra possibilità di modificare i campi, altrimenti visualizzali soltanto */}
                         {editMode? (
                             <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap:2 }}>
                                 <TextField
                                     label="Cellulare"
                                     type="tel"
                                     value={cellulare}
+                                    //in questo campo si possono scrivere solo numeri
                                     onChange={(e) => setCellulare(e.target.value.replace(/\D/g, ''))}
                                     disabled={!editMode}
                                 />
@@ -182,10 +196,12 @@ function UserProfile() {
                         )}
                     </Grid>
 
+                    {/* mostra eventuali errori o messaggi di successo */}
                     {saveError && <Alert severity="error" sx={{ mt: 2 }}>{saveError}</Alert>}
                     {saveSuccess && <Alert severity="success" sx={{ mt: 2 }}>{saveSuccess}</Alert>}
 
                     <Box sx={{ display: 'flex', gap: 2 }}>
+                        {/* se non si è in modalità modifica, renderizza il pulsante "Modifica", altrimenti renderizza il pulsante "Salva" */}
                         {!editMode ? (
                             <Button variant="contained" color="primary" onClick={handleEditClick}>Modifica</Button>
                         ) : (
