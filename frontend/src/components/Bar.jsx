@@ -11,7 +11,7 @@ const Bar = () => {
                 <Box sx={{ display: "flex", alignItems: "center"}}>
                     <img src="/StockPilot_icon_full_no_bg.png" alt="Logo StockPilot" style={{ height: 50 }} />
                 </Box>
-                {/* Inserimento del menù laterale a sinistra nella barra */}
+                {/* Inserimento del menù laterale a destra nella barra */}
                 <Box sx={{ display: "flex", alignItems: "center"}}>
                     <Menu/>
                 </Box>
