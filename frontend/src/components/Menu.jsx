@@ -60,7 +60,7 @@ const Menu = () => {
     //funzione che gestisce il logout
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+            await axios.post(`${BACKEND_URL}api/auth/logout`, {}, {
                 withCredentials: true,
             });
             localStorage.removeItem('accessToken'); //rimozione dell' accessToken da localStorage
