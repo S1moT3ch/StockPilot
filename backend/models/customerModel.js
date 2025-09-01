@@ -18,7 +18,6 @@ const customerSchema = new mongoose.Schema({
     città: {
         type: String,
         required: [true, 'La città è obbligatorio'],
-        unique:true,
     },
 
     indirizzo: {
