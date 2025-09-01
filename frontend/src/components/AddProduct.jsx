@@ -83,7 +83,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
                 descrizione: prodotto.descrizione,
                 quantità: prodotto.quantità,
                 ubicazione: prodotto.ubicazione,
-                categoria: prodotto.categoria ? prodotto.categoria.nome : '',
+                categoria: prodotto.categoria.nome ? prodotto.categoria.nome : '',
                 segnalazione: prodotto.segnalazione,
             }]);
         } catch (error) {
