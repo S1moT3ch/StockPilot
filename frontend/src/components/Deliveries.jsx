@@ -82,7 +82,7 @@ const Deliveries = () => {
                 withCredentials: true,
             });
 
-            await axios.put(`http://localhost:5000/api/products/delivery/${delivery.prodotto._id}`, {
+            await axios.put(`${BACKEND_URL}/api/products/delivery/${delivery.prodotto._id}`, {
                 quantita: delivery.quantita,
             },{
                 headers: {
