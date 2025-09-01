@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "production": "npm i express && npm i mongoose && npm i bcryptjs && npm i cookie-parser && npm i cors && npm i dotenv && npm i socket.io"
+    "production": "npm i express && npm i mongoose && npm i bcryptjs && npm i cookie-parser && npm i cors && npm i dotenv && npm i socket.io npm i jsonwebtoken"
   },
   "keywords": [],
   "author": "",
