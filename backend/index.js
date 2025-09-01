@@ -64,7 +64,7 @@ const PORT = process.env.PORT || 5000;
 
 //middleware definiti in ordine di esecuzione
 app.use(cors({
-    origin: "https://stockpilot-pied.vercel.app/",
+    origin: "https://stockpilot-pied.vercel.app",
     credentials: true
 }));
 
