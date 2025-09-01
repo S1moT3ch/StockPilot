@@ -17,7 +17,7 @@ const News = () => {
         const fetchNews = async () => {
             try {
                 const res = await axios.get(
-                    `https://newsapi.org/v2/everything?q=italia&sortBy=publishedAt&apiKey=${NEWS_API_KEY}`
+                    `https://gnews.io/api/v4/search?q=italia&sortby=publishedAt&token=${NEWS_API_KEY}&lang=it`
                 );
                 setNews(res.data.articles);
             } catch (err) {
