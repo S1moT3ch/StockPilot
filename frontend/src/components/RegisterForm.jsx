@@ -152,7 +152,7 @@ const RegisterForm = ({setIsLogin}) => {
                         }}
                     />
 
-                    //visualizza i messaggi d'errore
+                    {/* visualizza i messaggi d'errore */}
                     {errorMsg && (
                         <Alert severity="error">
                             {errorMsg}
