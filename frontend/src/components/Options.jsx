@@ -98,7 +98,12 @@ const Options = ({productId}) => {
                 </Alert>
             )}
 
-            <Button
+            <Button  sx={{bgcolor:"primary.main", color:"white", margin:"10px 0",
+                            "&:hover": {
+                                bgcolor: "primary.main",
+                                boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                            },
+                        }}
                 variant="contained"
                 onClick={() => handleUpdateProductLocation(productId, selectedLocation)}
             >

@@ -14,6 +14,8 @@ import axios from 'axios';
 import {BACKEND_URL} from "../config/config";
 
 import Bar from "./Bar";
+import Options from "./Options";
+import './style/Orders.css';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -101,19 +103,28 @@ const Orders = () => {
         <Box>
             <Bar />
             <Box>
-                <Typography variant="h4" gutterBottom>Tutti gli ordini</Typography>
+                <Typography variant="h4" gutterBottom align="center"
+                            sx={{my: 3, fontWeight: "bold"}}
+                >
+                    Tutti gli ordini
+                </Typography>
 
                 {orders.map((order) => (
-                    <Paper
+                    <Paper sx={{ boxShadow: "none", border: "none" }}
                         key={order._id}
                     >
-                        <Box>
-                            <Typography variant="h6">Ordine #{order._id}</Typography>
-                            <Typography>Cliente: {order.cliente.nome} {order.cliente.cognome}</Typography>
-                            <Typography>Prodotto: {order.prodotto.nome}</Typography>
-                            <Typography>Data: {order.data.split('T')[0]}</Typography>
+                        <Box className="containerOrders">
+                            <Typography variant="h6"  sx={{fontWeight:"bold", fontSize:"20px"}}>Ordine #{order._id}</Typography>
+                            <Typography className="details"><strong>Cliente:</strong> {order.cliente.nome} {order.cliente.cognome}</Typography>
+                            <Typography className="details"><strong>Prodotto:</strong> {order.prodotto.nome}</Typography>
+                            <Typography className="details"><strong>Data:</strong> {order.data.split('T')[0]}</Typography>
                         </Box>
-                        <Button variant="outlined" onClick={() => handleViewDetails(order._id)}>
+                        <Button variant="outlined" onClick={() => handleViewDetails(order._id)}
+                        sx={{marginLeft:"30px", bgcolor:"primary.main", color:"white", fontSize:"15px",
+                            "&:hover": {
+                                bgcolor: "primary.main",
+                                boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                            },}}>
                             Dettagli
                         </Button>
                     </Paper>
@@ -121,28 +132,28 @@ const Orders = () => {
 
                 {/* dialog per visualizzare i dettagli dell'ordine selezionato */}
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                    <DialogTitle>Dettagli Ordine</DialogTitle>
+                    <DialogTitle sx={{ fontWeight:"bold"}}>Dettagli Ordine</DialogTitle>
                     <DialogContent>
                         {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
                                 <CircularProgress/>
                             </Box>
                         ) : selectedOrder ? (
                             <Box>
-                                <Typography>Cliente: {selectedOrder.cliente.nome} {selectedOrder.cliente.cognome}</Typography>
-                                <Typography>Indirizzo: {selectedOrder.cliente.indirizzo}, {selectedOrder.cliente.città}</Typography>
-                                <Typography>Prodotto: {selectedOrder.prodotto.nome}</Typography>
+                                <Typography><strong>Cliente:</strong> {selectedOrder.cliente.nome} {selectedOrder.cliente.cognome}</Typography>
+                                <Typography><strong>Indirizzo:</strong> {selectedOrder.cliente.indirizzo}, {selectedOrder.cliente.città}</Typography>
+                                <Typography><strong>Prodotto:</strong> {selectedOrder.prodotto.nome}</Typography>
                                 <Box>
-                                    <Typography>Descrizione: {selectedOrder.prodotto.descrizione}</Typography>
-                                    <Typography>Categoria: {selectedOrder.prodotto.categoria.nome}</Typography>
-                                    <Typography>Quantità ordinata: {selectedOrder.quantita}</Typography>
+                                    <Typography><strong>Descrizione:</strong> {selectedOrder.prodotto.descrizione}</Typography>
+                                    <Typography><strong>Categoria:</strong> {selectedOrder.prodotto.categoria.nome}</Typography>
+                                    <Typography><strong>Quantità ordinata:</strong> {selectedOrder.quantita}</Typography>
                                     <Box>
-                                        <Typography>Ubicazione</Typography>
+                                        <Typography><strong>Ubicazione</strong></Typography>
                                         <Box>
                                             {selectedOrder.prodotto.inMagazzino ? (
                                                 <Box>
-                                                    <Typography>Corridoio: {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
-                                                    <Typography>Scaffale: {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
-                                                    <Typography>Mensola: {selectedOrder.prodotto.ubicazione.mensola}</Typography>
+                                                    <Typography><strong>Corridoio:</strong> {selectedOrder.prodotto.ubicazione.corridoio}</Typography>
+                                                    <Typography><strong>Scaffale:</strong> {selectedOrder.prodotto.ubicazione.scaffale}</Typography>
+                                                    <Typography><strong>Mensola:</strong> {selectedOrder.prodotto.ubicazione.mensola}</Typography>
                                                 </Box>
                                             ) : (
                                                 <Typography>Prodotto non ancora in magazzino. Controlla la sua posizione nel catalogo prodotti</Typography>
@@ -151,9 +162,16 @@ const Orders = () => {
                                         </Box>
                                     </Box>
                                 </Box>
+                                <Typography><strong>Data dell'ordine:</strong> {selectedOrder.data.split('T')[0]}</Typography>
+
                                 {/* mostra la data dell'ordine senza orario */}
                                 <Typography>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
-                                <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}>
+                                <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}
+                                 sx={{bgcolor:"primary.main", color:"white",
+                                    "&:hover": {
+                                        bgcolor: "primary.main",
+                                        boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                    },}}>
                                     Evadi ordine
                                 </Button>
                             </Box>

@@ -15,6 +15,7 @@ import {BACKEND_URL} from "../config/config";
 
 import Options from "./Options";
 import Bar from "./Bar";
+import './style/Deliveries.css';
 
 const Deliveries = () => {
     const [deliveries, setDeliveries] = useState([]);
@@ -101,20 +102,25 @@ const Deliveries = () => {
             <Bar />
             <Box>
 
-                <Typography variant="h4" gutterBottom>Registrazione consegne</Typography>
+                <Typography variant="h4" gutterBottom align="center" sx={{my: 3, fontWeight: "bold",}}>Registrazione consegne</Typography>
 
                 {deliveries.map((delivery) => (
-                    <Paper
+                    <Paper sx={{ boxShadow: "none", border: "none" }}
                         key={delivery._id}
                     >
-                        <Box>
-                            <Typography variant="h6">Consegna #{delivery._id}</Typography>
-                            <Typography>Azienda: {delivery.vettore.azienda}</Typography>
-                            <Typography>Corriere: {delivery.vettore.trasportatore}</Typography>
-                            <Typography>Prodotto: {delivery.prodotto.nome}</Typography>
-                            <Typography>Data: {delivery.data.split('T')[0]}</Typography>
+                        <Box className="containerDeliveries">
+                            <Typography variant="h6" sx={{fontWeight:"bold", fontSize:"20px"}}>Consegna #{delivery._id}</Typography>
+                            <Typography className="details"><strong>Azienda:</strong> {delivery.vettore.azienda}</Typography>
+                            <Typography className="details"><strong>Corriere:</strong> {delivery.vettore.trasportatore}</Typography>
+                            <Typography className="details"><strong>Prodotto:</strong> {delivery.prodotto.nome}</Typography>
+                            <Typography className="details"><strong>Data:</strong> {delivery.data.split('T')[0]}</Typography>
                         </Box>
-                        <Button variant="outlined" onClick={() => handleViewDetails(delivery._id)}>
+                        <Button variant="outlined" onClick={() => handleViewDetails(delivery._id)}
+                                sx={{marginLeft:"30px", bgcolor:"primary.main", color:"white", fontSize:"15px",
+                                    "&:hover": {
+                                        bgcolor: "primary.main",
+                                        boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                    },}}>
                             Dettagli
                         </Button>
                     </Paper>
@@ -122,29 +128,29 @@ const Deliveries = () => {
 
                 {/* dialog per visualizzare i dettagli della consegna selezionata */}
                 <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                    <DialogTitle>Dettagli Consegna</DialogTitle>
+                    <DialogTitle sx={{ fontWeight:"bold"}}>Dettagli Consegna</DialogTitle>
                     <DialogContent>
                         {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
                                 <CircularProgress/>
                             </Box>
                         ) : selectedDelivery ? (
                             <Box>
-                                <Typography>Azienda: {selectedDelivery.vettore.azienda}</Typography>
-                                <Typography>Corriere: {selectedDelivery.vettore.trasportatore}</Typography>
-                                <Typography>Prodotto</Typography>
-                                <Typography>Nome: {selectedDelivery.prodotto.nome}</Typography>
-                                <Typography>Descrizione: {selectedDelivery.prodotto.descrizione}</Typography>
-                                <Typography>Categoria: {selectedDelivery.prodotto.categoria.nome}</Typography>
-                                <Typography>Quantità in arrivo: {selectedDelivery.quantita}</Typography>
-                                <Typography>Data dell'ordine: {selectedDelivery.data.split('T')[0]}</Typography>
+                                <Typography><strong>Azienda:</strong> {selectedDelivery.vettore.azienda}</Typography>
+                                <Typography><strong>Corriere:</strong> {selectedDelivery.vettore.trasportatore}</Typography>
+                                <Typography><strong>Prodotto</strong></Typography>
+                                <Typography><strong>Nome:</strong> {selectedDelivery.prodotto.nome}</Typography>
+                                <Typography><strong>Descrizione:</strong> {selectedDelivery.prodotto.descrizione}</Typography>
+                                <Typography><strong>Categoria:</strong> {selectedDelivery.prodotto.categoria.nome}</Typography>
+                                <Typography><strong>Quantità in arrivo:</strong> {selectedDelivery.quantita}</Typography>
+                                <Typography><strong>Data dell'ordine:</strong> {selectedDelivery.data.split('T')[0]}</Typography>
                                 <Box>
-                                    <Typography>Ubicazione</Typography>
+                                    <Typography><strong>Ubicazione</strong></Typography>
                                     <Box>
                                         {selectedDelivery.prodotto.inMagazzino ? (
                                             <Box>
-                                                <Typography>Corridoio: {selectedDelivery.prodotto.ubicazione.corridoio}</Typography>
-                                                <Typography>Scaffale: {selectedDelivery.prodotto.ubicazione.scaffale}</Typography>
-                                                <Typography>Mensola: {selectedDelivery.prodotto.ubicazione.mensola}</Typography>
+                                                <Typography><strong>Corridoio:</strong> {selectedDelivery.prodotto.ubicazione.corridoio}</Typography>
+                                                <Typography><strong>Scaffale:</strong> {selectedDelivery.prodotto.ubicazione.scaffale}</Typography>
+                                                <Typography><strong>Mensola:</strong> {selectedDelivery.prodotto.ubicazione.mensola}</Typography>
                                             </Box>
                                         ) : (
                                             <Options productId={selectedDelivery.prodotto._id} />
@@ -152,7 +158,12 @@ const Deliveries = () => {
                                         }
                                     </Box>
                                 </Box>
-                                <Button variant='outlined' onClick={() => { handleDelete(selectedDelivery._id); handleClose()}}>
+                                <Button variant='outlined' onClick={() => { handleDelete(selectedDelivery._id); handleClose()}}
+                                        sx={{bgcolor:"primary.main", color:"white",
+                                            "&:hover": {
+                                                bgcolor: "primary.main",
+                                                boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                            },}}>
                                     Registra consegna
                                 </Button>
                             </Box>

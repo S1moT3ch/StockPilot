@@ -21,6 +21,8 @@ import {BACKEND_URL} from "../config/config";
 import AddProduct from './AddProduct';
 import Bar from "./Bar";
 import Options from "./Options";
+import './style/Catalog.css';
+
 
 const Catalogue = () => {
     const [products, setProducts] = useState([]);
@@ -186,10 +188,13 @@ const Catalogue = () => {
     return (
         <Box>
             <Bar />
-
-            <Typography variant="h4" gutterBottom>Catalogo Prodotti</Typography>
-
-            <Box display="flex" gap={2} mb={4} mt={6}>
+            <Typography variant="h4" gutterBottom align="center"
+                        sx={{my: 3, fontWeight: "bold"}}
+            >
+                Catalogo Prodotti
+            </Typography>
+                
+            <Box sx={{display: "flex", gap: 2, mt: 6, mb: 4, mx: "20px"}}>
 
                 {/* campi per filtrare i prodotti */}
                 <TextField
@@ -200,7 +205,7 @@ const Catalogue = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <FormControl fullWidth>
-                    <InputLabel>Categoria</InputLabel>
+                    <InputLabel sx={{fontSize:"18px", fontWeight:"bold"}}>Categoria</InputLabel>
                     <Select
                         value={selectedCategory}
                         label="Categoria"
@@ -220,15 +225,21 @@ const Catalogue = () => {
             </Box>
 
             {filteredProducts.map((product) => (
-                <Paper
+                <Paper sx={{ boxShadow: "none", border: "none" }}
                     key={product._id}
                 >
-                    <Box>
-                        <Typography variant="h6">Prodotto #{product._id}</Typography>
-                        <Typography>Nome: {product.nome}</Typography>
-                        <Typography>Categoria: {product.categoria.nome}</Typography>
+                    <Box className="containerProduct">
+                        <Typography variant="h6" sx={{fontWeight:"bold", fontSize:"20px"}}>Prodotto #{product._id}</Typography>
+                        <Typography className="details"><strong>Nome:</strong> {product.nome}</Typography>
+                        <Typography className="details"><strong>Categoria:</strong> {product.categoria.nome}</Typography>
                     </Box>
-                    <Button variant="outlined" onClick={() => handleViewDetails(product._id)}>
+                    <Button variant="outlined" onClick={() => handleViewDetails(product._id)}
+                            sx={{marginLeft:"30px", bgcolor:"primary.main", color:"white", fontSize:"15px",
+                                "&:hover": {
+                                    bgcolor: "primary.main",
+                                    boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                }
+                            }}>
                         Dettagli
                     </Button>
                 </Paper>
@@ -236,25 +247,25 @@ const Catalogue = () => {
 
             {/* dialog per visualiizare i dettagli del prodotto selezionato */}
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                <DialogTitle>Dettagli Prodotto</DialogTitle>
+                <DialogTitle  sx={{ fontWeight:"bold"}}>Dettagli Prodotto</DialogTitle>
                 <DialogContent>
                     {loading ? (<Box sx={{display: 'flex', justifyContent: 'center', p: 2}}>
                             <CircularProgress/>
                         </Box>
                     ) : selectedProduct ? (
                         <Box>
-                            <Typography>Nome: {selectedProduct.nome}</Typography>
-                            <Typography>Descrizione: {selectedProduct.descrizione}</Typography>
-                            <Typography>Quantità: {selectedProduct.quantità}</Typography>
-                            <Typography>Categoria: {selectedProduct.categoria.nome}</Typography>
+                            <Typography><strong>Nome:</strong> {selectedProduct.nome}</Typography>
+                            <Typography><strong>Descrizione:</strong> {selectedProduct.descrizione}</Typography>
+                            <Typography><strong>Quantità:</strong> {selectedProduct.quantità}</Typography>
+                            <Typography><strong>Categoria:</strong> {selectedProduct.categoria.nome}</Typography>
                             <Box>
-                                <Typography>Ubicazione</Typography>
+                                <Typography><strong>Ubicazione:</strong></Typography>
                                 <Box>
                                     {selectedProduct.inMagazzino ? (
                                         <Box>
-                                            <Typography>Corridoio: {selectedProduct.ubicazione.corridoio}</Typography>
-                                            <Typography>Scaffale: {selectedProduct.ubicazione.scaffale}</Typography>
-                                            <Typography>Mensola: {selectedProduct.ubicazione.mensola}</Typography>
+                                            <Typography><strong>Corridoio:</strong> {selectedProduct.ubicazione.corridoio}</Typography>
+                                            <Typography><strong>Scaffale:</strong> {selectedProduct.ubicazione.scaffale}</Typography>
+                                            <Typography><strong>Mensola:</strong> {selectedProduct.ubicazione.mensola}</Typography>
                                         </Box>
                                     ) : (
                                         <Options productId={selectedProduct._id} />
@@ -264,7 +275,7 @@ const Catalogue = () => {
                             </Box>
                             <Box>
                                 {selectedProduct.segnalazione && (
-                                    <Typography>Segnalazione: {selectedProduct.segnalazione}</Typography>
+                                    <Typography><strong>Segnalazione:</strong> {selectedProduct.segnalazione}</Typography>
                                 )}
                             </Box>
 
@@ -284,6 +295,11 @@ const Catalogue = () => {
                                             variant="outlined"
                                             onClick={handleAddSegnalazione}
                                             disabled={isSubmitting}
+                                            sx={{bgcolor:"primary.main", color:"white", marginBottom:"10px",
+                                                "&:hover": {
+                                                    bgcolor: "primary.main",
+                                                    boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                                },}}
                                         >
                                             {isSubmitting ? 'Invio' : 'Aggiungi Segnalazione'}
                                         </Button>
@@ -291,7 +307,12 @@ const Catalogue = () => {
                                 </Box>
                             )}
 
-                            <Button variant='outlined' onClick={() => { handleDelete(selectedProduct._id); handleClose()}}>
+                            <Button variant='outlined' onClick={() => { handleDelete(selectedProduct._id); handleClose()}}
+                                    sx={{bgcolor:"primary.main", color:"white",
+                                        "&:hover": {
+                                            bgcolor: "primary.main",
+                                            boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                        },}}>
                                 Cancella prodotto
                             </Button>
                         </Box>
@@ -301,12 +322,17 @@ const Catalogue = () => {
                 </DialogContent>
             </Dialog>
 
-            <Button variant='outlined' onClick={ handleViewAdd }>
+            <Button variant='outlined' onClick={ handleViewAdd }
+                    sx={{bgcolor:"primary.main", color:"white", margin:"10px 0px 10px 30px",
+                        "&:hover": {
+                            bgcolor: "primary.main",
+                            boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                        },}}>
                 Aggiungi un prodotto
             </Button>
 
             <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="sm">
-                <DialogTitle>Aggiungi un Prodotto</DialogTitle>
+                <DialogTitle sx={{fontWeight:"bold"}}>Aggiungi un Prodotto</DialogTitle>
                 <DialogContent>
                     <AddProduct
                         categories={categories}

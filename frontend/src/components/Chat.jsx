@@ -136,7 +136,7 @@ const Chat = () => {
             <Box display="flex" p={2} gap={2}>
                 <Paper>
                     <Typography variant="h6" p={2}>
-                        Utenti
+                        <strong>Utenti</strong>
                     </Typography>
                     {/* lista utenti */}
                     <List>
@@ -148,6 +148,9 @@ const Chat = () => {
                                     key={user._id}
                                     selected={selectedUser?._id === user._id}
                                     onClick={() => setSelectedUser(user)}
+                                    sx={{ cursor: "pointer", "&:hover .MuiListItemText-primary": {
+                                            textDecoration: "underline",
+                                        }, }}
                                 >
                                     <ListItemText primary={user.username} />
                                 </ListItem>
@@ -159,7 +162,7 @@ const Chat = () => {
                 {/* mostra chat con l'utente desiderato */}
                 <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <Box p={2} borderBottom="1px solid #ccc">
-                        <Typography variant="h6">
+                        <Typography variant="h6" sx={{fontWeight:"bold"}}>
                             Chat con {selectedUser ? selectedUser.username : '...'}
                         </Typography>
                     </Box>
@@ -221,7 +224,12 @@ const Chat = () => {
                             onChange={(e) => setText(e.target.value)}
                             disabled={!selectedUser}
                         />
-                        <Button variant="contained" type="submit" disabled={!selectedUser || !text.trim()}>
+                        <Button variant="contained" type="submit" disabled={!selectedUser || !text.trim()}
+                                sx={{bgcolor:"primary.main", color:"white", fontSize:"15px",
+                                    "&:hover": {
+                                        bgcolor: "primary.main",
+                                        boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                                    },}}>
                             Invia
                         </Button>
                     </Box>

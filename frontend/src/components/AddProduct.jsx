@@ -7,8 +7,11 @@ import {
     TextField,
     MenuItem,
     Select,
+    FormControl,
+    InputLabel
 } from '@mui/material';
 import axios from "axios";
+import './style/AddProduct.css';
 import {BACKEND_URL} from "../config/config";
 
 //componente per aggiugere i prodotti, che riceve delle props dal suo componente genitore
@@ -90,7 +93,7 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
 
     // box per aggiungere un prodotto con i relativi campi
     return (
-        <Box>
+        <Box className="containerForm">
             <TextField
                 label="Aggiungi nome"
                 type="text"
@@ -115,48 +118,61 @@ const AddProduct = ({ categories, setCategories, handleCloseAdd, setProduct, set
                 onChange={(e) => setQuantità(e.target.value)}
             />
 
-            <Select
-                fullWidth
-                value={categoria}
-                label="Categoria"
-                onChange={(e) => setCategoria(e.target.value)}
-            >
-                {/* visualizza un menù a tendina per visualizzare le categorie disponibili */}
-                <MenuItem value="">Tutte</MenuItem>
-                {categories.map((cat, index) => (
-                    <MenuItem
-                        key={index}
-                        value={cat._id}
-                    >
-                        {cat.nome}
-                    </MenuItem>
-                ))}
-            </Select>
+            <FormControl fullWidth>
+                <InputLabel id="categoria-label">Categoria</InputLabel>
+                <Select
+                    labelId="categoria-label"
+                    value={categoria}
+                    label="Categoria"
+                    onChange={(e) => setCategoria(e.target.value)}
+                >
+                    {/* visualizza un menù a tendina per visualizzare le categorie disponibili */}
+                    <MenuItem value="">Tutte</MenuItem>
+                    {categories.map((cat, index) => (
+                        <MenuItem
+                            key={index}
+                            value={cat._id}
+                        >
+                            {cat.nome}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
 
-            <Select
-                fullWidth
-                value={ubicazione}
-                label="Aggiungi Ubicazione"
-                onChange = {(e) => setUbicazione(e.target.value)}
-            >
-                {/* visualizza un menù a tendina per visualizzare le ubicazioni disponibili */}
-                {locations.map((location) => (
-                    <MenuItem key={location._id} value={location._id}>
-                        Corridoio&nbsp;<strong>{location.corridoio}</strong>,
-                        Scaffale&nbsp;<strong>{location.scaffale}</strong>,
-                        Mensola&nbsp;<strong>{location.mensola}</strong>
-                    </MenuItem>
-                ))}
-            </Select>
+            <FormControl fullWidth>
+                <InputLabel id="ubicazione-label">Ubicazione</InputLabel>
+                <Select
+                    labelId="ubicazione-label"
+                    value={ubicazione}
+                    label="Aggiungi Ubicazione"
+                    onChange = {(e) => setUbicazione(e.target.value)}
+                >
+                    {/* visualizza un menù a tendina per visualizzare le ubicazioni disponibili */}
+                    {locations.map((location) => (
+                        <MenuItem key={location._id} value={location._id}>
+                            Corridoio&nbsp;<strong>{location.corridoio}</strong>,
+                            Scaffale&nbsp;<strong>{location.scaffale}</strong>,
+                            Mensola&nbsp;<strong>{location.mensola}</strong>
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
 
             <TextField
                 label="Aggiungi eventuale segnalazione"
                 type="text"
-                required
                 value = {segnalazione}
                 onChange={(e) => setSegnalazione(e.target.value)}
             />
-            <Button variant="outlined" onClick={() => {handleAdd(); handleCloseAdd()}}>Aggiungi Prodotto</Button>
+            <Button variant="outlined" onClick={() => {handleAdd(); handleCloseAdd()}}
+                    sx={{bgcolor:"primary.main", color:"white", fontSize:"15px",
+                            "&:hover": {
+                                bgcolor: "primary.main",
+                                boxShadow: "inset 0px 4px 8px rgba(0,0,0,0.4)"
+                            }
+                        }}>
+                Aggiungi Prodotto
+            </Button>
         </Box>
     )
 }
