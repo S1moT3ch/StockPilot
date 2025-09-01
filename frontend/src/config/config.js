@@ -1,4 +1,4 @@
-export const BACKEND_URL = 'https://stockpilot-production.up.railway.app';
+export const BACKEND_URL = 'http://localhost:5000';
 
 export const METEO_API_KEY = "f46d15f626fe39b6a374c49015244d21";
 export const CITY = "Bari,it";

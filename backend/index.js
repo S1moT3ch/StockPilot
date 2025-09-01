@@ -21,7 +21,7 @@ const server = http.createServer(app); //creazione server http con l'app Express
 //avvio e gestione di socketIO
 const io = socketio(server, {
     cors: {
-        origin: 'https://stockpilot-pied.vercel.app',
+        origin: '*',
         methods: ['GET', 'POST'],
     }
 });
@@ -64,7 +64,7 @@ const PORT = process.env.PORT || 5000;
 
 //middleware definiti in ordine di esecuzione
 app.use(cors({
-    origin: "https://stockpilot-pied.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true
 }));
 
