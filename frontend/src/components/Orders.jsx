@@ -164,7 +164,7 @@ const Orders = () => {
                                 </Box>
 
                                 {/* mostra la data dell'ordine senza orario */}
-                                <Typography><strong>Data dell'ordine:</strong>Data dell'ordine: {selectedOrder.data.split('T')[0]}</Typography>
+                                <Typography><strong>Data dell'ordine: </strong>{selectedOrder.data.split('T')[0]}</Typography>
                                 <Button variant='outlined' onClick={() => { handleDelete(selectedOrder._id); handleClose()}}
                                  sx={{bgcolor:"primary.main", color:"white",
                                     "&:hover": {
