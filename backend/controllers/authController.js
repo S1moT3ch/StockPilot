@@ -75,8 +75,8 @@ exports.loginUser = async (req, res) => {
         // Si imposta il refresh token in un cookie HTTPOnly
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite:'Strict',
+            secure: true,
+            sameSite:'None',
             maxAge: 7*24*60*60*1000 //scadenza 7 giorni (come il token)
         })
 
@@ -167,8 +167,8 @@ exports.logoutUser = async (req,res) => {
         // Pulisci il cookie
         res.clearCookie('jwt', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
+            secure: true,
+            sameSite: 'None',
         });
         res.status(200).json({message: "Logout effettuato con successo." });
 
